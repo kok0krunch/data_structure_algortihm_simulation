@@ -1,8 +1,17 @@
-#Binary Search Tree
-#Ask user to input number
-#First number is directly outputted
-#REMOVE THIS IN FINAL (FOR CHECKING ONLY)
-#REMOVE THIS IN FINAL (FOR CHECKING ONLY)
-#Program will ask for user input until user types 'Done' or they have reached the maximum inputs (100 inputs)
-#Suceeding numbers will be identified whether greater or smaller than the first number and preceding numbers.
-#Smaller numbers go the left, larger numbers go to the right
+# Binary Search Tree
+    # Use class
+        # Class attributes: top, left, right
+        # Functions needed
+            # First number as root
+            # Determine if number is bigger or smaller
+                # smaller/equal = left
+                # bigger = right
+            # Traverse the tree until it reaches an empty node
+            # Insert in binary tree
+                
+    #Use definition
+        # input
+            #Ask user to input number (input)
+        # main
+            # Enable user to input until maximum input is reached(31 inputs)(Use while?)
+            # If number is reached/ typed done. Print tree
