@@ -8,10 +8,10 @@ class BinarySearchTree: # Use class
     
     # Functions needed
     def insert(self):
-        if self.root==None:
+        if self.root==None: # First number as root
             self.root=self.number
             return self.root
-            # First number as root
+        
             # Determine if number is bigger or smaller
                 # smaller/equal = left
                 # bigger = right
@@ -20,7 +20,12 @@ class BinarySearchTree: # Use class
                 
     #Use definition
         # input
-            #Ask user to input number (input)
-        # main
+def input_number():
+    number_input=int(input("Enter number:"))
+    BinarySearchTree.number=number_input
+    #Ask user to input number (input)
+    # main
+
+input_number()
             # Enable user to input until maximum input is reached(31 inputs)(Use while?)
             # If number is reached/ typed done. Print tree
