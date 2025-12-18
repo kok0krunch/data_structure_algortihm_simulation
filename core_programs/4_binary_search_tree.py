@@ -4,7 +4,13 @@ class BinarySearchTree: # Use class
         self.number=number
         self.left=left
         self.right=right # Class attributes: top, left, right
-        # Functions needed
+        self.root=None
+    
+    # Functions needed
+    def insert(self):
+        if self.root==None:
+            self.root=self.number
+            return self.root
             # First number as root
             # Determine if number is bigger or smaller
                 # smaller/equal = left
