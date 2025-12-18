@@ -1,6 +1,9 @@
 # Binary Search Tree
-    # Use class
-        # Class attributes: top, left, right
+class BinarySearchTree: # Use class
+    def __init__(self, number, left, right):
+        self.number=number
+        self.left=left
+        self.right=right # Class attributes: top, left, right
         # Functions needed
             # First number as root
             # Determine if number is bigger or smaller
