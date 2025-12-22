@@ -15,12 +15,17 @@ class BinarySearchTree:
         if self.root==None: # First number as root
             self.root=number
             return self.root
-        
-            # Determine if number is bigger or smaller
-                # smaller/equal = left
-                # bigger = right
-            # Traverse the tree until it reaches an empty node
-            # Insert in binary tree
+        else: # Determine if number is bigger or smaller
+            if number>self.number: # smaller/equal = left
+                if self.left is None:
+                    self.left=Node(number) # Traverse the tree until it reaches an empty node
+                else:
+                    self.left.insert(number)  # Insert in binary tree
+            else: # bigger = right
+                if self.right is None:
+                    self.right=Node(number) # Traverse the tree until it reaches an empty node
+                else:
+                    self.right.insert(number) # Insert in binary tree
                 
     #Use definition
         # input
