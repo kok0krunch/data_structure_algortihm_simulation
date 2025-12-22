@@ -16,7 +16,7 @@ class BinarySearchTree:
             self.root=number
             return self.root
         else: # Determine if number is bigger or smaller
-            if number>self.number: # smaller/equal = left
+            if number>self.root: # smaller/equal = left
                 if self.left is None:
                     self.left=Node(number) # Traverse the tree until it reaches an empty node
                 else:
@@ -30,10 +30,8 @@ class BinarySearchTree:
 # main
 inputted_number=0
 binary_search_tree=BinarySearchTree()
-while inputted_number!=100:
-    try: # Enable user to input until maximum input is reached(31 inputs)(Use while?)
+while inputted_number!=100:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
         binary_search_tree.insert(int(input("Enter number:")))
 # If number is reached/ user typed done. Print tree
-    except:
         print("You have typed done, creating your tree.")
         break
