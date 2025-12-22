@@ -51,5 +51,8 @@ while inputted_number!=100:# Enable user to input until maximum input is reached
         binary_search_tree.print_tree()
         break
 
-print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
-binary_search_tree.print_tree()
+if inputted_number==100:
+    print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
+    binary_search_tree.print_tree()
+else:
+    exit()
