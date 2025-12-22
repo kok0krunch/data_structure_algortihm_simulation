@@ -2,8 +2,8 @@
 # Use class
 class Node:
     def __init__(self,number,left,right): # Class attributes: top, left, right
-        self.number=number
-        self.left=left
+        self.number=None
+        self.left=None
         self.right=right
 
 class BinarySearchTree: 
@@ -26,23 +26,14 @@ class BinarySearchTree:
                     self.right=Node(number) # Traverse the tree until it reaches an empty node
                 else:
                     self.right.insert(number) # Insert in binary tree
-                
-    #Use definition
-        # input
-def input_number():
-    number_input=input("Enter number:")
-    binary_search_tree.number=number_input
-    print(binary_search_tree.number)
-    binary_search_tree.insert(number_input)
-    print(binary_search_tree.root)
-    #Ask user to input number (input)
-    # main
 
+# main
 inputted_number=0
 binary_search_tree=BinarySearchTree()
 while inputted_number!=100:
-    input_number()
-    binary_search_tree.insert()
-    inputted_number+=1
-            # Enable user to input until maximum input is reached(31 inputs)(Use while?)
-            # If number is reached/ typed done. Print tree
+    try: # Enable user to input until maximum input is reached(31 inputs)(Use while?)
+        binary_search_tree.insert(int(input("Enter number:")))
+# If number is reached/ user typed done. Print tree
+    except:
+        print("You have typed done, creating your tree.")
+        break
