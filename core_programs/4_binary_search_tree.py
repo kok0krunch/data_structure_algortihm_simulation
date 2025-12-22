@@ -2,9 +2,9 @@
 # Use class
 class Node:
     def __init__(self,number,left,right): # Class attributes: top, left, right
-        self.number=None
+        self.number=number
         self.left=None
-        self.right=right
+        self.right=None
 
 class BinarySearchTree: 
     def __init__(self):
@@ -13,19 +13,21 @@ class BinarySearchTree:
     # Functions needed
     def insert(self, number):
         if self.root==None: # First number as root
-            self.root=number
-            return self.root
+            self.root=Node(number)
         else: # Determine if number is bigger or smaller
-            if number>self.root: # smaller/equal = left
-                if self.left is None:
-                    self.left=Node(number) # Traverse the tree until it reaches an empty node
-                else:
-                    self.left.insert(number)  # Insert in binary tree
-            else: # bigger = right
-                if self.right is None:
-                    self.right=Node(number) # Traverse the tree until it reaches an empty node
-                else:
-                    self.right.insert(number) # Insert in binary tree
+            self.branching(self.root,number)
+
+    def branching(self,current,number):
+        if number>current.number: # smaller/equal = left
+            if self.left is None:
+                current.left=Node(number) # Traverse the tree until it reaches an empty node
+            else:
+                self.branching(number)  # Insert in binary tree
+        else: # bigger = right
+            if self.right is None:
+                current.right=Node(number) # Traverse the tree until it reaches an empty node
+            else:
+                self.branching(number) # Insert in binary tree
 
 # main
 inputted_number=0
@@ -33,5 +35,3 @@ binary_search_tree=BinarySearchTree()
 while inputted_number!=100:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
         binary_search_tree.insert(int(input("Enter number:")))
 # If number is reached/ user typed done. Print tree
-        print("You have typed done, creating your tree.")
-        break
