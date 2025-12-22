@@ -29,15 +29,14 @@ class BinarySearchTree:
             else:
                 self.branching(current.right,number) # Insert in binary tree
 
-        # 🌳 PRINT TREE
-    def print_tree(self):
+    def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
 
     def _print_tree(self, node, level):
         if node is not None:
-            self._print_tree(node.right, level + 1)
+            self._print_tree(node.right, level + 2)
             print("   " * level + str(node.number))
-            self._print_tree(node.left, level + 1)
+            self._print_tree(node.left, level + 2)
 # main
 inputted_number=0
 binary_search_tree=BinarySearchTree()
