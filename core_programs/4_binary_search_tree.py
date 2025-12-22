@@ -37,18 +37,22 @@ class BinarySearchTree:
             self._print_tree(node.right, level + 2)
             print("   " * level + str(node.number))
             self._print_tree(node.left, level + 2)
-# main
-inputted_number=0
-binary_search_tree=BinarySearchTree()
-while inputted_number!=100:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
+
+#definitions
+def input_number():
     try:
         user_input=int(input("Enter number:"))
         binary_search_tree.insert(user_input)
-        inputted_number+=1
     except:
         print("You have entered a non-integer/have typed done. Creating tree") # If number is reached/ user typed done. Print tree
         binary_search_tree.print_tree()
-        break
+
+# main program
+inputted_number=0
+binary_search_tree=BinarySearchTree()
+while inputted_number!=100:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
+    input_number()
+    inputted_number+=1
 
 if inputted_number==100:
     print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
