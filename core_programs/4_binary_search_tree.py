@@ -45,7 +45,7 @@ while inputted_number!=5:# Enable user to input until maximum input is reached(3
     try:
         user_input=int(input("Enter number:"))
         binary_search_tree.insert(user_input)
-
+        inputted_number+=1
     except:
         print("You have entered a non-integer/have typed done. Creating tree") # If number is reached/ user typed done. Print tree
         binary_search_tree.print_tree()
