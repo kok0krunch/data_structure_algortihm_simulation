@@ -38,7 +38,11 @@ def input_number():
     #Ask user to input number (input)
     # main
 
+inputted_number=0
 binary_search_tree=BinarySearchTree()
-input_number()
+while inputted_number!=100:
+    input_number()
+    binary_search_tree.insert()
+    inputted_number+=1
             # Enable user to input until maximum input is reached(31 inputs)(Use while?)
             # If number is reached/ typed done. Print tree
