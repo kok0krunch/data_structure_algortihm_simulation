@@ -31,5 +31,81 @@ class Queue:
             raise IndexError("Peek from empty queue")
         return self.items[self.front]
 
+    def display(self):
+        if self.isEmpty():
+            return "Queue is empty"
+        items = [self.items[i] for i in range(self.front, self.rear)]
+        items.reverse()
+        return " -> ".join(map(str, items))
 
+
+def print_menu():
+    print("\n" + "="*50)
+    print("QUEUE OPERATIONS MENU")
+    print("="*50)
+    print("1. Enqueue (Add element)")
+    print("2. Dequeue (Remove element)")
+    print("3. Peek (View front element)")
+    print("4. Check if Empty")
+    print("5. Get Queue Size")
+    print("6. Display Queue")
+    print("7. Exit")
+    print("="*50)
+
+
+def main():
+    queue = Queue()
     
+    while True:
+        print_menu()
+        choice = input("Enter your choice (1-7): ").strip()
+        
+        if choice == '1':
+            try:
+                element = input("Enter element to enqueue: ").strip()
+                if element:
+                    queue.enqueue(element)
+                    print(f"✓ '{element}' added to queue")
+                else:
+                    print("✗ Invalid input. Please enter a non-empty element.")
+            except Exception as e:
+                print(f"✗ Error: {e}")
+        
+        elif choice == '2':
+            try:
+                removed = queue.dequeue()
+                print(f"✓ Dequeued: '{removed}'")
+            except IndexError as e:
+                print(f"✗ Error: {e}")
+        
+        elif choice == '3':
+            try:
+                front = queue.peek()
+                print(f"✓ Front element: '{front}'")
+            except IndexError as e:
+                print(f"✗ Error: {e}")
+        
+        elif choice == '4':
+            if queue.isEmpty():
+                print("✓ Queue is EMPTY")
+            else:
+                print("✓ Queue is NOT empty")
+        
+        elif choice == '5':
+            size = queue.size()
+            print(f"✓ Queue size: {size}")
+        
+        elif choice == '6':
+            display = queue.display()
+            print(f"Queue contents: {display}")
+        
+        elif choice == '7':
+            print("\n✓ Exiting... Goodbye!")
+            break
+        
+        else:
+            print("✗ Invalid choice. Please select 1-7.")
+
+
+if __name__ == "__main__":
+    main()
