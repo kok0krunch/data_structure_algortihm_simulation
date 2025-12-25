@@ -66,6 +66,7 @@ def main():
                 if element:
                     queue.enqueue(element)
                     print(f"✓ '{element}' added to queue")
+                    print(f"Current Queue: {queue.display()}")
                 else:
                     print("✗ Invalid input. Please enter a non-empty element.")
             except Exception as e:
@@ -75,6 +76,7 @@ def main():
             try:
                 removed = queue.dequeue()
                 print(f"✓ Dequeued: '{removed}'")
+                print(f"Current Queue: {queue.display()}")
             except IndexError as e:
                 print(f"✗ Error: {e}")
         
@@ -82,6 +84,7 @@ def main():
             try:
                 front = queue.peek()
                 print(f"✓ Front element: '{front}'")
+                print(f"Current Queue: {queue.display()}")
             except IndexError as e:
                 print(f"✗ Error: {e}")
         
@@ -90,10 +93,12 @@ def main():
                 print("✓ Queue is EMPTY")
             else:
                 print("✓ Queue is NOT empty")
+            print(f"Current Queue: {queue.display()}")
         
         elif choice == '5':
             size = queue.size()
             print(f"✓ Queue size: {size}")
+            print(f"Current Queue: {queue.display()}")
         
         elif choice == '6':
             display = queue.display()
@@ -105,6 +110,7 @@ def main():
         
         else:
             print("✗ Invalid choice. Please select 1-7.")
+
 
 
 if __name__ == "__main__":
