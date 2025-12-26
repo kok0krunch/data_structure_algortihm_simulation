@@ -68,3 +68,28 @@ while True:
                 display_log()
             else:
                 print("❌ Parking garage is full!")
+    
+    elif choice == '2':
+        if not parking.is_empty():
+            car = input("Enter car license plate to depart: ").strip().upper()
+            temp_cars = []
+            found = False
+            while not parking.is_empty():
+                current_car = parking.pop()
+                if current_car == car:
+                    car_log[car][1] += 1
+                    print(f"✓ Car {car} departed!")
+                    found = True
+                    break
+                temp_cars.append(current_car)
+            if found:
+                for temp_car in reversed(temp_cars):
+                    car_log[temp_car][0] += 1
+                    parking.push(temp_car)
+            else:
+                for temp_car in temp_cars:
+                    parking.push(temp_car)
+                print(f"✗ Car {car} not found in garage!")
+            display_log()
+        else:
+            print("❌ Garage is empty!")
