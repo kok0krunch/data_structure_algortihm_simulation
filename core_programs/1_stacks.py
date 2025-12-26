@@ -105,3 +105,7 @@ while True:
                 print(f"{car}")
         print(f"\nCapacity: {parking.size()}/{max_capacity}")
         print("=" * 40)
+    
+    elif choice == '4':
+        print("Goodbye!")
+        break
