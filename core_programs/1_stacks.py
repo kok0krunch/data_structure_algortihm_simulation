@@ -57,3 +57,14 @@ while True:
     except ValueError:
         print("Invalid input. Please enter a number from 1 to 4.")
         continue
+
+    if choice == '1':
+            if parking.size() < max_capacity:
+                car = input("Enter car license plate: ").strip().upper()
+                parking.push(car)
+                car_log[car] = car_log.get(car, [0, 0])
+                car_log[car][0] += 1
+                print(f"✅ Car {car} arrived!")
+                display_log()
+            else:
+                print("❌ Parking garage is full!")
