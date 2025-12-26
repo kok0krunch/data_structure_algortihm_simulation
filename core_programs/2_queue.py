@@ -1,7 +1,6 @@
-#Queue Data Structure Core Program
-#Queue Logic Python File
-#Implement Enqqueue(), Dequeue(), Peek(), isEmpty(), and size operations as Python Functions
+#Queue Program Logic Python File
 #Implement Table for license plate, number of arrival, number of departure, and who arrived and departed
+#Implement a 4 Lane Parking Garage Simulation using Queue Data Structure
 
 class Queue:
     def __init__(self):
@@ -93,23 +92,8 @@ def main():
                 print("✓ Queue is NOT empty")
             print(f"Current Queue: {queue.display()}")
         
-        elif choice == '5':
-            size = queue.size()
-            print(f"✓ Queue size: {size}")
-            print(f"Current Queue: {queue.display()}")
-        
-        elif choice == '6':
-            display = queue.display()
-            print(f"Queue contents: {display}")
-        
-        elif choice == '7':
-            print("\n✓ Exiting... Goodbye!")
-            break
-        
         else:
-            print("✗ Invalid choice. Please select 1-7.")
-
-
+            print("✗ Invalid choice. Please select 1-4.")
 
 if __name__ == "__main__":
     main()
