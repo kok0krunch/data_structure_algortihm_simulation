@@ -42,3 +42,10 @@ def display_log():
     for car, [arrivals, departures] in car_log.items():
         print(f"{car:<15} {arrivals:<10} {departures:<10}")
     print("=" * 40)
+    
+def display_menu():
+    print("\n========= PARKING GARAGE SYSTEM =========")
+    print("1. Arrive")
+    print("2. Depart")
+    print("3. View garage")
+    print("4. Exit")
