@@ -45,49 +45,7 @@ def print_menu():
 
 
 def main():
-    queue = Queue()
-    
-    while True:
-        print_menu()
-        choice = input("Enter your choice (1-4): ").strip()
-        
-        if choice == '1':
-            try:
-                element = input("Enter element to enqueue: ").strip()
-                if element:
-                    queue.enqueue(element)
-                    print(f"✓ '{element}' added to queue")
-                    print(f"Current Queue: {queue.display()}")
-                else:
-                    print("✗ Invalid input. Please enter a non-empty element.")
-            except Exception as e:
-                print(f"✗ Error: {e}")
-        
-        elif choice == '2':
-            try:
-                removed = queue.dequeue()
-                print(f"✓ Dequeued: '{removed}'")
-                print(f"Current Queue: {queue.display()}")
-            except IndexError as e:
-                print(f"✗ Error: {e}")
-        
-        elif choice == '3':
-            try:
-                front = queue.peek()
-                print(f"✓ Front element: '{front}'")
-                print(f"Current Queue: {queue.display()}")
-            except IndexError as e:
-                print(f"✗ Error: {e}")
-        
-        elif choice == '4':
-            if queue.isEmpty():
-                print("✓ Queue is EMPTY")
-            else:
-                print("✓ Queue is NOT empty")
-            print(f"Current Queue: {queue.display()}")
-        
-        else:
-            print("✗ Invalid choice. Please select 1-4.")
+
 
 if __name__ == "__main__":
     main()
