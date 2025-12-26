@@ -3,10 +3,17 @@
 #Implement a 4 Lane Parking Garage Simulation using Queue Data Structure
 
 class Queue:
-    def __init__(self):
+    def __init__(self, lane_id):
         self.items = {}
         self.front = 0
         self.rear = 0
+        self.lane_id = lane_id # Identity for this lane (e.g., 1, 2, 3, 4)
+
+    def isEmpty(self):
+        return self.rear == self.front
+
+    def size(self):
+        return self.rear - self.front
 
     def enqueue(self, item):
         self.items[self.rear] = item
@@ -19,6 +26,11 @@ class Queue:
         del self.items[self.front]
         self.front += 1
         return item
+
+    def peek(self):
+        if self.isEmpty():
+            raise IndexError("Peek from empty queue")
+        return self.items[self.front]
 
 
 def print_menu():
