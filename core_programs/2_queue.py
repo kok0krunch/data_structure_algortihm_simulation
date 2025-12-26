@@ -1,6 +1,10 @@
 #Queue Program Logic Python File
 #Implement Table for license plate, number of arrival, number of departure, and who arrived and departed
 #Implement a 4 Lane Parking Garage Simulation using Queue Data Structure
+#Implement a Random License plate generator for cars arriving at the parking garage
+import random
+import string
+
 
 class Queue:
     def __init__(self, lane_id):
@@ -45,6 +49,8 @@ def print_menu():
 
 
 def main():
+
+
 
 
 if __name__ == "__main__":
