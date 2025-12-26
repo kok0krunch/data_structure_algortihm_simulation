@@ -23,3 +23,11 @@ class Stack:
         if not self.is_empty():
             return self.items[-1]
         return None
+
+# Parking garage program
+print("Welcome to the Parking Garage System!")
+while True:
+    max_capacity = int(input("Enter parking capacity (minimum of 5): "))
+    if max_capacity >= 5:
+        break
+    print("Capacity must be at least 5!")
