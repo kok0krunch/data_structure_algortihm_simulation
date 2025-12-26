@@ -52,8 +52,7 @@ def print_menu():
     print("="*50)
     print("1. Park Car (Enqueue)")
     print("2. Depart Car (Dequeue)")
-    print("3. View Parking Garage")
-    print("4. Exit Parking Garage")
+    print("3. Exit Parking Garage")
     print("="*50)
 
 
@@ -105,7 +104,7 @@ def main():
     
     while True:
         print_menu()
-        choice = input("Enter your choice (1-4): ").strip()
+        choice = input("Enter your choice (1-3): ").strip()
         
         if choice == '1':  # Park Car
             license_plate = generate_license_plate()
@@ -127,6 +126,7 @@ def main():
             lanes[best_lane].enqueue(car_data)
             print(f"\n✓ Car {license_plate} parked successfully in Lane {best_lane + 1}")
             print(f"  Lane Arrival #: {lane_arrival_num}")
+            display_parking_table(lanes)
         
         elif choice == '2':  # Depart Car
             print("\nSelect a lane to depart from (1-4) or 0 to cancel:")
@@ -156,18 +156,16 @@ def main():
                     
                     print(f"\n✓ Car {departed_car['plate']} departed from Lane {lane_num}")
                     print(f"  Lane Departure #: {lane_departure_num}")
+                    display_parking_table(lanes)
             except ValueError:
                 print("Invalid input!")
         
-        elif choice == '3':  # View Parking Garage
-            display_parking_table(lanes)
-        
-        elif choice == '4':  # Exit
+        elif choice == '3':  # Exit
             print("\nThank you for using the Parking Garage System!")
             break
         
         else:
-            print("Invalid choice! Please enter 1-4.")
+            print("Invalid choice! Please enter 1-3.")
 
 if __name__ == "__main__":
     main()
