@@ -109,3 +109,6 @@ while True:
     elif choice == '4':
         print("Goodbye!")
         break
+    
+    else:
+        print("Invalid choice. Please enter 1-4.")
