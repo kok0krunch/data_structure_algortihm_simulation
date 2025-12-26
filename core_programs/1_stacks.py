@@ -3,23 +3,23 @@
 
 class Stack:
     def __init__(self):
-        self.items = []
+        self.items = [] # List to hold stack items
         
     def push(self, item):
-        self.items.append(item)
+        self.items.append(item) # Add item to the list 
         
-    def pop(self):
+    def pop(self): # Remove item from the top of the stack
         if not self.is_empty():
-            return self.items.pop()
+            return self.items.pop() 
         return None
         
-    def is_empty(self):
-        return len(self.items) == 0
+    def is_empty(self): # Check if list is empty
+        return len(self.items) == 0 
         
-    def size(self):
-        return len(self.items)
+    def size(self): # Number of items in the stack
+        return len(self.items) 
         
-    def peek(self):
+    def peek(self): # Return the top item without removing it
         if not self.is_empty():
             return self.items[-1]
         return None
