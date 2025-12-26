@@ -8,12 +8,6 @@ class Queue:
         self.front = 0
         self.rear = 0
 
-    def isEmpty(self):
-        return self.size() == 0
-
-    def size(self):
-        return self.rear - self.front
-
     def enqueue(self, item):
         self.items[self.rear] = item
         self.rear += 1
@@ -25,18 +19,6 @@ class Queue:
         del self.items[self.front]
         self.front += 1
         return item
-
-    def peek(self):
-        if self.isEmpty():
-            raise IndexError("Peek from empty queue")
-        return self.items[self.front]
-
-    def display(self):
-        if self.isEmpty():
-            return "Queue is empty"
-        items = [self.items[i] for i in range(self.front, self.rear)]
-        items.reverse()
-        return " -> ".join(map(str, items))
 
 
 def print_menu():
