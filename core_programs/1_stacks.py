@@ -93,3 +93,15 @@ while True:
             display_log()
         else:
             print("❌ Garage is empty!")
+            
+    elif choice == '3':
+        print("\n" + "=" * 40)
+        print("CARS IN GARAGE:")
+        print("=" * 40)
+        if parking.is_empty():
+            print("(Empty)")
+        else:
+            for i, car in enumerate(reversed(parking.items), 1):
+                print(f"{car}")
+        print(f"\nCapacity: {parking.size()}/{max_capacity}")
+        print("=" * 40)
