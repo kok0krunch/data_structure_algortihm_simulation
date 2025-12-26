@@ -31,3 +31,6 @@ while True:
     if max_capacity >= 5:
         break
     print("Capacity must be at least 5!")
+    
+parking = Stack()
+car_log = {}
