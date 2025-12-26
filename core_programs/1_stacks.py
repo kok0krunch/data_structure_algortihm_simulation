@@ -34,3 +34,11 @@ while True:
     
 parking = Stack()
 car_log = {}
+
+def display_log():
+    print("\n" + "=" * 40)
+    print(f"{'LICENSE PLATE':<15} {'ARRIVALS':<10} {'DEPARTURES':<10}")
+    print("=" * 40)
+    for car, [arrivals, departures] in car_log.items():
+        print(f"{car:<15} {arrivals:<10} {departures:<10}")
+    print("=" * 40)
