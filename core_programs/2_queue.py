@@ -42,15 +42,12 @@ class Queue:
 
 def print_menu():
     print("\n" + "="*50)
-    print("QUEUE OPERATIONS MENU")
+    print("Parking Garage Queue Management")
     print("="*50)
-    print("1. Enqueue (Add element)")
-    print("2. Dequeue (Remove element)")
-    print("3. Peek (View front element)")
-    print("4. Check if Empty")
-    print("5. Get Queue Size")
-    print("6. Display Queue")
-    print("7. Exit")
+    print("1. Park Car (Enqueue)")
+    print("2. Depart Car (Dequeue)")
+    print("3. View Parking Garage")
+    print("4. Exit Parking Garage")
     print("="*50)
 
 
@@ -59,7 +56,7 @@ def main():
     
     while True:
         print_menu()
-        choice = input("Enter your choice (1-7): ").strip()
+        choice = input("Enter your choice (1-4): ").strip()
         
         if choice == '1':
             try:
