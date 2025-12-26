@@ -49,3 +49,11 @@ def display_menu():
     print("2. Depart")
     print("3. View garage")
     print("4. Exit")
+    
+while True:
+    display_menu()
+    try:
+        choice = input("\nChoose an option (1-4): ").strip()
+    except ValueError:
+        print("Invalid input. Please enter a number from 1 to 4.")
+        continue
