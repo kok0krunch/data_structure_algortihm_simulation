@@ -46,3 +46,12 @@ def TowerTwoToTowerThree(user_input, tower_2, tower_1, tower_3):
     TowerTwoToTowerThree(int(user_input) - 1, tower_1, tower_2, tower_3)
 
 TowerTwoToTowerThree(user_input, 'tower_2', 'tower_1', 'tower_3')
+
+def TowerThreeToTowerOne(user_input, tower_3, tower_2, tower_1):
+    if user_input == 0:
+        return
+    TowerThreeToTowerOne(int(user_input) - 1, tower_3, tower_1, tower_2)
+    print("Move disk", user_input, "from", tower_3, "to", tower_1)
+    TowerThreeToTowerOne(int(user_input) - 1, tower_2, tower_3, tower_1)
+
+TowerThreeToTowerOne(user_input, 'tower_3', 'tower_2', 'tower_1')
