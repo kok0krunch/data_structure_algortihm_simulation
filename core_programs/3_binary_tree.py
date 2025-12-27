@@ -13,6 +13,15 @@ class BinaryTree:
     def insert(self, number): #Insert the input into tree (left to right per level)
         if self.root==None: # First number as root
             self.root=Node(number)
+    
+    def preorder(Self): #organizes each item in the tree in the order: Top, left, right
+        pass
+
+    def inorder(self): #organizes each item in the tree in the order: left, top right
+        pass
+
+    def postorder(Self): #organizes each item in the tree in the order: left, right, top
+        pass
 
 #Make user input numbers
 #Let user input until maximum levels are reached (max of 5 levels, 32 inputs)
