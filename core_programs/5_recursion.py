@@ -17,6 +17,7 @@ def TowerOneToTowerThree(user_input, tower_1, tower_2, tower_3):
     TowerOneToTowerThree(int(user_input) - 1, tower_1, tower_3, tower_2)
     print('Move disk', user_input, 'from', tower_1, 'to', tower_3)
     TowerOneToTowerThree(int(user_input) - 1, tower_2, tower_1, tower_3)
+TowerOneToTowerThree(user_input, 'tower_1', 'tower_2', 'tower_3') 
 
 def TowerOneToTowerTwo(user_input, tower_1, tower_2, tower_3):
     if user_input == 0:
@@ -25,17 +26,15 @@ def TowerOneToTowerTwo(user_input, tower_1, tower_2, tower_3):
     TowerOneToTowerTwo(int(user_input) - 1, tower_1, tower_3, tower_2)
     print("Move disk", user_input, "from", tower_1, "to", tower_2)
     TowerOneToTowerTwo(int(user_input) - 1, tower_3, tower_2, tower_1)
+TowerOneToTowerTwo(user_input, 'tower_1', 'tower_2', 'tower_3')
 
-def TowerTwoToTowerOne(user_input, tower_1, tower_2, tower_3):
-    if user_input:
+def TowerTwoToTowerOne(user_input, tower_2, tower_3, tower_1):
+    if user_input == 0:
         return
     
     TowerTwoToTowerOne(int(user_input) - 1, tower_2, tower_1, tower_3)
     print("Move disk", user_input, "from", tower_2, "to", tower_1)
     TowerTwoToTowerOne(int(user_input) - 1, tower_3, tower_2, tower_1)
 
-TowerTwoToTowerOne(user_input, 'tower_1', 'tower_2', 'tower_3')
-TowerOneToTowerTwo(user_input, 'tower_1', 'tower_2', 'tower_3')
-TowerOneToTowerThree(user_input, 'tower_1', 'tower_2', 'tower_3') 
-
+TowerTwoToTowerOne(user_input, 'tower_2', 'tower_3', 'tower_1')
 #note: possible na i ask pano sya ilagay sa tower 2 or maybe yung placement ng disks ay nasa tower 3
