@@ -1,15 +1,22 @@
-#Queue Data Structure Core Program
-#Queue Logic Python File
-#Implement Enqqueue(), Dequeue(), Peek(), isEmpty(), and size operations as Python Functions
+#Queue Program Logic Python File
+#Implement Table for license plate, number of arrival, number of departure, and who arrived and departed
+#Implement a 4 Lane Parking Garage Simulation using Queue Data Structure
+#Implement a Random License plate generator for cars arriving at the parking garage
+import random
+import string
+
 
 class Queue:
-    def __init__(self):
+    def __init__(self, lane_id):
         self.items = {}
         self.front = 0
         self.rear = 0
+        self.lane_id = lane_id # Identity for this lane (e.g., 1, 2, 3, 4)
+        self.arrival_count = 0  # Track total arrivals in this lane
+        self.departure_count = 0  # Track total departures in this lane
 
     def isEmpty(self):
-        return self.size() == 0
+        return self.rear == self.front
 
     def size(self):
         return self.rear - self.front
@@ -31,87 +38,134 @@ class Queue:
             raise IndexError("Peek from empty queue")
         return self.items[self.front]
 
-    def display(self):
-        if self.isEmpty():
-            return "Queue is empty"
-        items = [self.items[i] for i in range(self.front, self.rear)]
-        items.reverse()
-        return " -> ".join(map(str, items))
+
+def generate_license_plate():
+    """Generate a random license plate in format ABC-123"""
+    letters = ''.join(random.choices(string.ascii_uppercase, k=3))
+    numbers = ''.join(random.choices(string.digits, k=3))
+    return f"{letters}-{numbers}"
 
 
 def print_menu():
     print("\n" + "="*50)
-    print("QUEUE OPERATIONS MENU")
+    print("Parking Garage Queue Management")
     print("="*50)
-    print("1. Enqueue (Add element)")
-    print("2. Dequeue (Remove element)")
-    print("3. Peek (View front element)")
-    print("4. Check if Empty")
-    print("5. Get Queue Size")
-    print("6. Display Queue")
-    print("7. Exit")
+    print("1. Park Car (Enqueue)")
+    print("2. Depart Car (Dequeue)")
+    print("3. Exit Parking Garage")
     print("="*50)
+
+
+def display_parking_table(lanes):
+    """Display formatted table with parking information"""
+    print("\n" + "="*90)
+    print(f"{'License Plate':<15} {'Arrival #':<12} {'Departure #':<15} {'Status':<45}")
+    print("="*90)
+    
+    # Collect all cars from all lanes
+    all_cars = []
+    for lane_id, lane in enumerate(lanes, 1):
+        for position, (index, car_data) in enumerate(lane.items.items()):
+            status = f"Lane {lane_id} - {'Front' if position == 0 else f'Position {position}'}"
+            all_cars.append({
+                'plate': car_data['plate'],
+                'arrival': car_data['arrival_num'],
+                'departure': car_data.get('departure_num', '-'),
+                'status': status
+            })
+    
+    # Display departed cars first
+    if hasattr(display_parking_table, 'departed_cars'):
+        for car in display_parking_table.departed_cars:
+            departure_str = str(car['departure_num']) if car['departure_num'] else '-'
+            print(f"{car['plate']:<15} {car['arrival_num']:<12} {departure_str:<15} {'Departed':<45}")
+    
+    # Display parked cars
+    for car in all_cars:
+        departure_str = str(car['departure']) if car['departure'] != '-' else '-'
+        print(f"{car['plate']:<15} {car['arrival']:<12} {departure_str:<15} {car['status']:<45}")
+    
+    print("="*90)
+    print("="*90)
+    
+    # Display lane statistics at the bottom
+    print("\nLane Statistics:")
+    for lane in lanes:
+        print(f"  Lane {lane.lane_id}: Arrivals: {lane.arrival_count} | Departures: {lane.departure_count}")
+    print("="*90 + "\n")
 
 
 def main():
-    queue = Queue()
+    # Initialize 4 parking lanes with lane-specific counters
+    lanes = [Queue(i+1) for i in range(4)]
+    
+    # Store departed cars with their lane information
+    display_parking_table.departed_cars = []
     
     while True:
         print_menu()
-        choice = input("Enter your choice (1-7): ").strip()
+        choice = input("Enter your choice (1-3): ").strip()
         
-        if choice == '1':
+        if choice == '1':  # Park Car
+            license_plate = generate_license_plate()
+            
+            # Find the lane with the most space
+            best_lane = min(range(4), key=lambda i: lanes[i].size())
+            
+            # Increment lane-specific arrival counter
+            lanes[best_lane].arrival_count += 1
+            lane_arrival_num = lanes[best_lane].arrival_count
+            
+            car_data = {
+                'plate': license_plate,
+                'arrival_num': lane_arrival_num,
+                'departure_num': None,
+                'lane_id': best_lane + 1
+            }
+            
+            lanes[best_lane].enqueue(car_data)
+            print(f"\n✓ Car {license_plate} parked successfully in Lane {best_lane + 1}")
+            print(f"  Lane Arrival #: {lane_arrival_num}")
+            display_parking_table(lanes)
+        
+        elif choice == '2':  # Depart Car
+            print("\nSelect a lane to depart from (1-4) or 0 to cancel:")
+            lane_choice = input("Enter lane number: ").strip()
+            
             try:
-                element = input("Enter element to enqueue: ").strip()
-                if element:
-                    queue.enqueue(element)
-                    print(f"✓ '{element}' added to queue")
-                    print(f"Current Queue: {queue.display()}")
+                lane_num = int(lane_choice)
+                if lane_num == 0:
+                    print("Cancelled.")
+                    continue
+                if lane_num < 1 or lane_num > 4:
+                    print("Invalid lane number!")
+                    continue
+                
+                lane_idx = lane_num - 1
+                if lanes[lane_idx].isEmpty():
+                    print(f"Lane {lane_num} is empty!")
                 else:
-                    print("✗ Invalid input. Please enter a non-empty element.")
-            except Exception as e:
-                print(f"✗ Error: {e}")
+                    # Increment lane-specific departure counter
+                    lanes[lane_idx].departure_count += 1
+                    lane_departure_num = lanes[lane_idx].departure_count
+                    
+                    departed_car = lanes[lane_idx].dequeue()
+                    departed_car['departure_num'] = lane_departure_num
+                    
+                    display_parking_table.departed_cars.append(departed_car)
+                    
+                    print(f"\n✓ Car {departed_car['plate']} departed from Lane {lane_num}")
+                    print(f"  Lane Departure #: {lane_departure_num}")
+                    display_parking_table(lanes)
+            except ValueError:
+                print("Invalid input!")
         
-        elif choice == '2':
-            try:
-                removed = queue.dequeue()
-                print(f"✓ Dequeued: '{removed}'")
-                print(f"Current Queue: {queue.display()}")
-            except IndexError as e:
-                print(f"✗ Error: {e}")
-        
-        elif choice == '3':
-            try:
-                front = queue.peek()
-                print(f"✓ Front element: '{front}'")
-                print(f"Current Queue: {queue.display()}")
-            except IndexError as e:
-                print(f"✗ Error: {e}")
-        
-        elif choice == '4':
-            if queue.isEmpty():
-                print("✓ Queue is EMPTY")
-            else:
-                print("✓ Queue is NOT empty")
-            print(f"Current Queue: {queue.display()}")
-        
-        elif choice == '5':
-            size = queue.size()
-            print(f"✓ Queue size: {size}")
-            print(f"Current Queue: {queue.display()}")
-        
-        elif choice == '6':
-            display = queue.display()
-            print(f"Queue contents: {display}")
-        
-        elif choice == '7':
-            print("\n✓ Exiting... Goodbye!")
+        elif choice == '3':  # Exit
+            print("\nThank you for using the Parking Garage System!")
             break
         
         else:
-            print("✗ Invalid choice. Please select 1-7.")
-
-
+            print("Invalid choice! Please enter 1-3.")
 
 if __name__ == "__main__":
     main()
