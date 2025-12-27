@@ -23,8 +23,25 @@ class BinaryTree:
     def postorder(Self): #organizes each item in the tree in the order: left, right, top
         pass
 
-#Make user input numbers
-#Let user input until maximum levels are reached (max of 5 levels, 32 inputs)
+#Main Code
+#Definitions
+def input_number(): #Make user input numbers
+    try:
+        user_input=input("Enter number:")
+        if user_input=="":
+            binary_tree.insert("-")
+        else:
+            binary_tree.insert(user_input)
+    except:
+        pass
+
+#Main Porgram
+inputted_number=0
+binary_tree=BinaryTree()
+while inputted_number!=31:# #Let user input until maximum levels are reached (max of 5 levels, 31 inputs)
+    input_number()
+    inputted_number+=1
+
     #Ask user if they want to add another level after filling in each level. User can:
         # Add level
         # finish input
