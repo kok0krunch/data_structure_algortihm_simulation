@@ -10,6 +10,14 @@ if choose_origin_tower == choose_destination_tower:
 num_moves = 2 ** int(user_input) - 1
 print(f"It takes {num_moves} to solve for the tower")
 
+# Functions for solving Tower of Hanoi using recursion
+def TowerOneToTowerTwo(user_input, tower_1, tower_2, tower_3):
+    if user_input == 0:
+        return
+    TowerOneToTowerTwo(int(user_input) - 1, tower_1, tower_3, tower_2)
+    print("Move disk", user_input, "from", tower_1, "to", tower_2)
+    TowerOneToTowerTwo(int(user_input) - 1, tower_3, tower_2, tower_1)
+
 def TowerOneToTowerThree(user_input, tower_1, tower_2, tower_3):
     if user_input == 0:
         return
@@ -17,16 +25,6 @@ def TowerOneToTowerThree(user_input, tower_1, tower_2, tower_3):
     TowerOneToTowerThree(int(user_input) - 1, tower_1, tower_3, tower_2)
     print('Move disk', user_input, 'from', tower_1, 'to', tower_3)
     TowerOneToTowerThree(int(user_input) - 1, tower_2, tower_1, tower_3)
-TowerOneToTowerThree(user_input, 'tower_1', 'tower_2', 'tower_3') 
-
-def TowerOneToTowerTwo(user_input, tower_1, tower_2, tower_3):
-    if user_input == 0:
-        return
-    
-    TowerOneToTowerTwo(int(user_input) - 1, tower_1, tower_3, tower_2)
-    print("Move disk", user_input, "from", tower_1, "to", tower_2)
-    TowerOneToTowerTwo(int(user_input) - 1, tower_3, tower_2, tower_1)
-TowerOneToTowerTwo(user_input, 'tower_1', 'tower_2', 'tower_3')
 
 def TowerTwoToTowerOne(user_input, tower_2, tower_3, tower_1):
     if user_input == 0:
@@ -45,16 +43,12 @@ def TowerTwoToTowerThree(user_input, tower_2, tower_1, tower_3):
     print("Move disk", user_input, "from", tower_2, "to", tower_3)
     TowerTwoToTowerThree(int(user_input) - 1, tower_1, tower_2, tower_3)
 
-TowerTwoToTowerThree(user_input, 'tower_2', 'tower_1', 'tower_3')
-
 def TowerThreeToTowerOne(user_input, tower_3, tower_2, tower_1):
     if user_input == 0:
         return
     TowerThreeToTowerOne(int(user_input) - 1, tower_3, tower_1, tower_2)
     print("Move disk", user_input, "from", tower_3, "to", tower_1)
     TowerThreeToTowerOne(int(user_input) - 1, tower_2, tower_3, tower_1)
-
-TowerThreeToTowerOne(user_input, 'tower_3', 'tower_2', 'tower_1')
 
 def TowerThreeToTowerTwo(user_input, tower_3, tower_1, tower_2):
     if user_input == 0:
@@ -63,4 +57,10 @@ def TowerThreeToTowerTwo(user_input, tower_3, tower_1, tower_2):
     print("Move disk", user_input, "from", tower_3, "to", tower_2)
     TowerThreeToTowerTwo(int(user_input) - 1, tower_1, tower_3, tower_2)
 
+# Calls the functions
+TowerOneToTowerTwo(user_input, 'tower_1', 'tower_2', 'tower_3')
+TowerOneToTowerThree(user_input, 'tower_1', 'tower_2', 'tower_3') 
+TowerTwoToTowerOne(user_input, 'tower_2', 'tower_3', 'tower_1')
+TowerTwoToTowerThree(user_input, 'tower_2', 'tower_1', 'tower_3')
+TowerThreeToTowerOne(user_input, 'tower_3', 'tower_2', 'tower_1')
 TowerThreeToTowerTwo(user_input, 'tower_3', 'tower_1', 'tower_2')
