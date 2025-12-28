@@ -83,10 +83,19 @@ def render_parking_grid(lanes, grid_rows=4, grid_cols=4):
     for row_idx, row in enumerate(grid):
         lane = lanes[row_idx]
         status_indicator = " [FULL]" if lane.isFull() else ""
-        print(f"Lane {row_idx + 1}{status_indicator}: ", end="")
-        for spot in row:
-            print(spot, end=" ")
-        print(f" ({lane.size()}/4)")
+        lane_label = f"Lane {row_idx + 1}{status_indicator}: "
+        spots_display = " ".join(row)
+        capacity_display = f"({lane.size()}/4)"
+        # Right-align capacity to match ENTRANCE end position (around column 59)
+        output = f"{lane_label}{spots_display}"
+        # Pad to align capacity at the right edge, under ENTRANCE
+        print(f"{output:<54}{capacity_display:>5}")
+    print("="*60)
+    
+    # Display lane statistics
+    print("\nLane Statistics:")
+    for lane in lanes:
+        print(f"  Lane {lane.lane_id}: Arrivals: {lane.arrival_count} | Departures: {lane.departure_count}")
     print("="*60 + "\n")
 
 
