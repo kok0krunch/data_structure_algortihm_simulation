@@ -4,16 +4,18 @@
 #Implement a Random License plate generator for cars arriving at the parking garage
 import random
 import string
+import core_programs_module as cpm
 
 
 class Queue:
-    def __init__(self, lane_id):
+    def __init__(self, lane_id, max_capacity=4):
         self.items = {}
         self.front = 0
         self.rear = 0
         self.lane_id = lane_id # Identity for this lane (e.g., 1, 2, 3, 4)
         self.arrival_count = 0  # Track total arrivals in this lane
         self.departure_count = 0  # Track total departures in this lane
+        self.max_capacity = max_capacity  # Maximum cars allowed in this lane
 
     def isEmpty(self):
         return self.rear == self.front
@@ -21,9 +23,15 @@ class Queue:
     def size(self):
         return self.rear - self.front
 
+    def isFull(self):
+        return self.size() >= self.max_capacity
+
     def enqueue(self, item):
+        if self.isFull():
+            return False  # Failed to enqueue
         self.items[self.rear] = item
         self.rear += 1
+        return True  # Successfully enqueued
 
     def dequeue(self):
         if self.isEmpty():
@@ -44,6 +52,39 @@ def generate_license_plate():
     letters = ''.join(random.choices(string.ascii_uppercase, k=3))
     numbers = ''.join(random.choices(string.digits, k=3))
     return f"{letters}-{numbers}"
+
+
+def render_parking_grid(lanes, grid_rows=4, grid_cols=5):
+    """Render a visual parking grid showing occupied and empty spots.
+    
+    Args:
+        lanes: List of Queue objects representing parking lanes
+        grid_rows: Number of rows in the parking grid
+        grid_cols: Number of columns in the parking grid
+    """
+    # Create empty grid
+    grid = [["[ ---- ]" for _ in range(grid_cols)] for _ in range(grid_rows)]
+    
+    # Fill grid with cars from each lane - each lane gets its own row
+    for lane_idx, lane in enumerate(lanes):
+        col_index = 0
+        for position, (index, car_data) in enumerate(lane.items.items()):
+            if lane_idx < grid_rows and col_index < grid_cols:
+                # Display license plate or first part of it for brevity
+                plate_display = car_data['plate'][:8] if len(car_data['plate']) > 8 else car_data['plate']
+                grid[lane_idx][col_index] = f"[{plate_display:>6}]"
+            col_index += 1
+    
+    # Render the grid
+    print("\n" + "="*60)
+    print("Parking Garage")
+    print("="*60)
+    for row_idx, row in enumerate(grid):
+        print(f"Lane {row_idx + 1}: ", end="")
+        for spot in row:
+            print(spot, end=" ")
+        print()
+    print("="*60 + "\n")
 
 
 def print_menu():
@@ -103,30 +144,56 @@ def main():
     display_parking_table.departed_cars = []
     
     while True:
+        cpm.clear_console()
+        render_parking_grid(lanes)
         print_menu()
         choice = input("Enter your choice (1-3): ").strip()
         
         if choice == '1':  # Park Car
             license_plate = generate_license_plate()
             
-            # Find the lane with the most space
-            best_lane = min(range(4), key=lambda i: lanes[i].size())
+            # Show lane availability
+            print("\nAvailable lanes:")
+            for i in range(4):
+                capacity_info = f"{lanes[i].size()}/4"
+                status = "FULL" if lanes[i].isFull() else "Available"
+                print(f"  Lane {i + 1}: {capacity_info} ({status})")
             
-            # Increment lane-specific arrival counter
-            lanes[best_lane].arrival_count += 1
-            lane_arrival_num = lanes[best_lane].arrival_count
+            # Ask user to choose a lane
+            lane_choice = input("\nSelect a lane (1-4) or 0 to cancel: ").strip()
             
-            car_data = {
-                'plate': license_plate,
-                'arrival_num': lane_arrival_num,
-                'departure_num': None,
-                'lane_id': best_lane + 1
-            }
-            
-            lanes[best_lane].enqueue(car_data)
-            print(f"\n✓ Car {license_plate} parked successfully in Lane {best_lane + 1}")
-            print(f"  Lane Arrival #: {lane_arrival_num}")
-            display_parking_table(lanes)
+            try:
+                lane_num = int(lane_choice)
+                if lane_num == 0:
+                    print("Cancelled.")
+                    continue
+                if lane_num < 1 or lane_num > 4:
+                    print("Invalid lane number!")
+                    continue
+                
+                lane_idx = lane_num - 1
+                
+                # Check if lane is full
+                if lanes[lane_idx].isFull():
+                    print(f"Lane {lane_num} is full! Cannot park.")
+                    continue
+                
+                # Increment lane-specific arrival counter
+                lanes[lane_idx].arrival_count += 1
+                lane_arrival_num = lanes[lane_idx].arrival_count
+                
+                car_data = {
+                    'plate': license_plate,
+                    'arrival_num': lane_arrival_num,
+                    'departure_num': None,
+                    'lane_id': lane_num
+                }
+                
+                lanes[lane_idx].enqueue(car_data)
+                print(f"✓ Car {license_plate} parked successfully in Lane {lane_num}")
+                print(f"  Lane Arrival #: {lane_arrival_num}")
+            except ValueError:
+                print("Invalid input!")
         
         elif choice == '2':  # Depart Car
             print("\nSelect a lane to depart from (1-4) or 0 to cancel:")
@@ -154,9 +221,8 @@ def main():
                     
                     display_parking_table.departed_cars.append(departed_car)
                     
-                    print(f"\n✓ Car {departed_car['plate']} departed from Lane {lane_num}")
+                    print(f"✓ Car {departed_car['plate']} departed from Lane {lane_num}")
                     print(f"  Lane Departure #: {lane_departure_num}")
-                    display_parking_table(lanes)
             except ValueError:
                 print("Invalid input!")
         
