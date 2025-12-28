@@ -322,3 +322,100 @@ class BinarySearchTree:
             return node
 
         self.root = build(values, 1)
+
+# === PARKING SYSTEM ===
+
+import string
+
+class Queue:
+    """Queue data structure for parking lane management."""
+    
+    def __init__(self, lane_id, max_capacity=4):
+        self.items = {}
+        self.front = 0
+        self.rear = 0
+        self.lane_id = lane_id  # Identity for this lane (e.g., 1, 2, 3, 4)
+        self.arrival_count = 0  # Track total arrivals in this lane
+        self.departure_count = 0  # Track total departures in this lane
+        self.max_capacity = max_capacity  # Maximum cars allowed in this lane
+
+    def isEmpty(self):
+        return self.rear == self.front
+
+    def size(self):
+        return self.rear - self.front
+
+    def isFull(self):
+        return self.size() >= self.max_capacity
+
+    def enqueue(self, item):
+        if self.isFull():
+            return False  # Failed to enqueue
+        self.items[self.rear] = item
+        self.rear += 1
+        return True  # Successfully enqueued
+
+    def dequeue(self):
+        if self.isEmpty():
+            raise IndexError("Dequeue from empty queue")
+        item = self.items[self.front]
+        del self.items[self.front]
+        self.front += 1
+        return item
+
+    def peek(self):
+        if self.isEmpty():
+            raise IndexError("Peek from empty queue")
+        return self.items[self.front]
+
+
+def generate_license_plate():
+    """Generate a random license plate in format ABC-123."""
+    letters = ''.join(random.choices(string.ascii_uppercase, k=3))
+    numbers = ''.join(random.choices(string.digits, k=3))
+    return f"{letters}-{numbers}"
+
+
+def render_parking_grid(lanes, grid_rows=4, grid_cols=4):
+    """Render a visual parking grid showing occupied and empty spots.
+    
+    Args:
+        lanes: List of Queue objects representing parking lanes
+        grid_rows: Number of rows in the parking grid
+        grid_cols: Number of columns in the parking grid
+    """
+    # Create empty grid
+    grid = [["[ ---- ]" for _ in range(grid_cols)] for _ in range(grid_rows)]
+    
+    # Fill grid with cars from each lane - each lane gets its own row
+    for lane_idx, lane in enumerate(lanes):
+        col_index = 0
+        for position, (index, car_data) in enumerate(lane.items.items()):
+            if lane_idx < grid_rows and col_index < grid_cols:
+                # Display license plate or first part of it for brevity
+                plate_display = car_data['plate'][:8] if len(car_data['plate']) > 8 else car_data['plate']
+                grid[lane_idx][col_index] = f"[{plate_display:>6}]"
+            col_index += 1
+    
+    # Render the grid
+    print("\n" + "="*60)
+    print("Parking Garage")
+    print("="*60)
+    print("EXIT " + " "*45 + "ENTRANCE")
+    for row_idx, row in enumerate(grid):
+        lane = lanes[row_idx]
+        status_indicator = " [FULL]" if lane.isFull() else ""
+        lane_label = f"Lane {row_idx + 1}{status_indicator}: "
+        spots_display = " ".join(row)
+        capacity_display = f"({lane.size()}/4)"
+        # Right-align capacity to match ENTRANCE end position (around column 59)
+        output = f"{lane_label}{spots_display}"
+        # Pad to align capacity at the right edge, under ENTRANCE
+        print(f"{output:<54}{capacity_display:>5}")
+    print("="*60)
+    
+    # Display lane statistics
+    print("\nLane Statistics:")
+    for lane in lanes:
+        print(f"  Lane {lane.lane_id}: Arrivals: {lane.arrival_count} | Departures: {lane.departure_count}")
+    print("="*60 + "\n")
