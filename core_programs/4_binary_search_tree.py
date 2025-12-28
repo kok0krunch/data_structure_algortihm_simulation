@@ -119,6 +119,7 @@ if __name__ == "__main__":
                     sub_choice = input("Select an option (1-4): ").strip()
 
                     if sub_choice == "4":
+                        bst = None
                         break
 
                     if sub_choice == "1":
