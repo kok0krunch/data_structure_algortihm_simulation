@@ -1,9 +1,8 @@
 #Binary Tree Pseudocode
-class Node:
-    def __init__(self,number): # Class attributes: top, left, right
-        self.number=number
-        self.left=None
-        self.right=None
+import core_programs_module
+from core_programs_module import Node
+# Node class imported from core_programs_module
+# Class attributes: value, left, right
 
 class BinaryTree: 
     def __init__(self):
@@ -12,13 +11,13 @@ class BinaryTree:
     # Functions needed
     def insert(self, number): #Insert the input into tree (left to right per level)
         if self.root==None: # First number as root
-            self.root=Node(number)
+            self.root=Node(number)  # Using Node from core_programs_module
     
     def preorder(self): #organizes each item in the tree in the order: Top, left, right
         result = []
         def traverse(node):
             if node:
-                result.append(node.number)
+                result.append(node.value)
                 traverse(node.left)
                 traverse(node.right)
         traverse(self.root)
@@ -29,7 +28,7 @@ class BinaryTree:
         def traverse(node):
             if node:
                 traverse(node.left)
-                result.append(node.number)
+                result.append(node.value)
                 traverse(node.right)
         traverse(self.root)
         return result
@@ -40,7 +39,7 @@ class BinaryTree:
             if node:
                 traverse(node.left)
                 traverse(node.right)
-                result.append(node.number)
+                result.append(node.value)
         traverse(self.root)
         return result
 
@@ -54,7 +53,7 @@ class BinaryTree:
 #Binary Tree Implementation
 #Import shared module for organization
 #Use core_programs_module to implement Binary Tree
-import core_programs_module
+
 
 #Render tree lines
 def pretty_print_diagonal(root, max_depth: int) -> None:
