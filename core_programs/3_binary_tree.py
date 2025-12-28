@@ -27,19 +27,24 @@ class BinaryTree:
 #Definitions
 def input_number(): #Make user input numbers
     try:
-        user_input=input("Enter number:")
-        if user_input=="":
+        user_input=input("Enter number (or type 'exit' to quit):")
+        if user_input.lower()=="exit":
+            return "exit"
+        elif user_input=="":
             binary_tree.insert("-")
         else:
             binary_tree.insert(user_input)
+        return "continue"
     except:
-        pass
+        return "continue"
 
 #Main Porgram
 inputted_number=0
 binary_tree=BinaryTree()
 while inputted_number!=31:# #Let user input until maximum levels are reached (max of 5 levels, 31 inputs)
-    input_number()
+    result = input_number()
+    if result == "exit":
+        break
     inputted_number+=1
 
     #Ask user if they want to add another level after filling in each level. User can:
