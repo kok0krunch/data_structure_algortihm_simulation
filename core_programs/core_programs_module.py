@@ -73,6 +73,41 @@ def pretty_print_diagonal(root, max_depth: int) -> None:
         print("".join(line).rstrip())
 
 
+def render_tree_view(title: str, tree, max_depth: int, current_depth: int, status: str = "") -> None:
+    """Shared tree renderer for console UIs.
+
+    Args:
+        title: Heading to display (e.g., "BINARY TREE VIEW")
+        tree: Tree instance with a .root attribute
+        max_depth: Maximum allowed depth for the tree
+        current_depth: Currently selected/build depth
+        status: Optional status line to display
+    """
+    clear_console()
+    print(f"==================== {title} ====================")
+    print(f"Max depth: {max_depth} | Current depth: {current_depth}")
+    print(f"Status: {status if status else '(none)'}")
+    print("--------------------------------------------------")
+    if tree is None or getattr(tree, "root", None) is None:
+        print("<no tree built>")
+    else:
+        pretty_print_diagonal(tree.root, max_depth)
+    print("==================================================")
+
+
+def ensure_tree(tree, tree_cls, current_depth: int, max_depth: int, low: int = 0, high: int = 1000):
+    """Create and build a full tree when not already present.
+
+    Returns (tree_instance, status_message).
+    """
+    if tree is not None:
+        return tree, ""
+
+    instance = tree_cls(max_depth=max_depth)
+    instance.build_full_tree(target_depth=current_depth, low=low, high=high)
+    return instance, f"Initialized tree at depth {current_depth}."
+
+
 # === BST Implementation ===
 
 class Node:

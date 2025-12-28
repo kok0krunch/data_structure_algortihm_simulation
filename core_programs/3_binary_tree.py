@@ -1,6 +1,5 @@
 #Binary Tree Pseudocode
-import core_programs_module
-from core_programs_module import BinaryTree
+import core_programs_module as cpm
 
 #Main Code
 #Ask user if they want to add another level after filling in each level. User can:
@@ -16,32 +15,15 @@ from core_programs_module import BinaryTree
 
 #Binary Tree Main Logic File
 if __name__ == "__main__":
-
-    def clear_console() -> None:
-        core_programs_module.clear_console()
-
     tree = None
     MAX_LEVEL = 5
     current_depth = MAX_LEVEL
-
-    def render_tree(status: str = "") -> None:
-        clear_console()
-        print("================= BINARY TREE VIEW ===============")
-        print(f"Max depth: {MAX_LEVEL} | Current depth: {current_depth}")
-        if status:
-            print(f"Status: {status}")
-        else:
-            print("Status: (none)")
-        print("--------------------------------------------------")
-        if tree is None or tree.root is None:
-            print("<no tree built>")
-        else:
-            core_programs_module.pretty_print_diagonal(tree.root, MAX_LEVEL)
-        print("==================================================")
+    status = ""
 
     while True:
         try:
-            render_tree()
+            cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
+            status = ""
             print("\n============== BINARY TREE MENU ================")
             print(" 1) Build full tree (depth 1-5)")
             print(" 2) Quit")
@@ -58,9 +40,10 @@ if __name__ == "__main__":
                     print(f"Please enter a number between 1 and {MAX_LEVEL}.")
                     continue
                 current_depth = level
-                tree = BinaryTree(max_depth=MAX_LEVEL)
+                tree = cpm.BinaryTree(max_depth=MAX_LEVEL)
                 tree.build_full_tree(target_depth=level, low=0, high=1000)
-                render_tree(f"Built full tree to depth {level} (max depth = {MAX_LEVEL}).")
+                status = f"Built full tree to depth {level} (max depth = {MAX_LEVEL})."
+                cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
                 # Interactive sub-menu for traversal operations
                 while True:
                     print("\n-- Traversal Options --")
@@ -72,30 +55,36 @@ if __name__ == "__main__":
 
                     if sub_choice == "4":
                         tree = None
+                        status = ""
                         break
 
                     if sub_choice == "1":
                         # Pre-Order traversal (root, left, right)
                         result = tree.preorder()
-                        render_tree(f"Pre-Order: {result}")
+                        status = f"Pre-Order: {result}"
+                        cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
                         continue
 
                     if sub_choice == "2":
                         # In-Order traversal (left, root, right)
                         result = tree.inorder()
-                        render_tree(f"In-Order: {result}")
+                        status = f"In-Order: {result}"
+                        cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
                         continue
 
                     if sub_choice == "3":
                         # Post-Order traversal (left, right, root)
                         result = tree.postorder()
-                        render_tree(f"Post-Order: {result}")
+                        status = f"Post-Order: {result}"
+                        cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
                         continue
 
-                    render_tree("Invalid choice. Enter a number 1-4.")
+                    status = "Invalid choice. Enter a number 1-4."
+                    cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
                 continue
 
-            print("Invalid choice. Enter a number 1-2.")
-            render_tree("Invalid choice. Enter a number 1-2.")
+            status = "Invalid choice. Enter a number 1-2."
+            cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)
         except ValueError:
-            render_tree("Invalid input. Please try again.")
+            status = "Invalid input. Please try again."
+            cpm.render_tree_view("BINARY TREE VIEW", tree, MAX_LEVEL, current_depth, status)

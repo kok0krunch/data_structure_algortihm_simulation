@@ -1,45 +1,20 @@
 #Binary Search Tree
 #Import shared module for organization
 #Use core_programs_module to implement BST
-import core_programs_module
+import core_programs_module as cpm
 
 
 #Binary Search Tree Main Logic File
 if __name__ == "__main__":
-
-    def clear_console() -> None:
-        core_programs_module.clear_console()
-
     bst = None
     MAX_LEVEL = 5
     current_depth = MAX_LEVEL
-
-    def render_tree(status: str = "") -> None:
-        clear_console()
-        print("==================== BST VIEW ====================")
-        print(f"Max depth: {MAX_LEVEL} | Current depth: {current_depth}")
-        if status:
-            print(f"Status: {status}")
-        else:
-            print("Status: (none)")
-        print("--------------------------------------------------")
-        if bst is None or bst.root is None:
-            print("<no tree built>")
-        else:
-            core_programs_module.pretty_print_diagonal(bst.root, MAX_LEVEL)
-        print("==================================================")
-
-    def ensure_tree() -> None:
-        # Use module-level variables for current tree state
-        global bst, current_depth
-        if bst is None:
-            bst = core_programs_module.BinarySearchTree(max_depth=MAX_LEVEL)
-            bst.build_full_tree(target_depth=current_depth, low=0, high=1000)
-            render_tree(f"Initialized tree at depth {current_depth}.")
+    status = ""
 
     while True:
         try:
-            render_tree()
+            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
+            status = ""
             print("\n==================== BST MENU ====================")
             print(" 1) Build full tree (depth 1-5)")
             print(" 2) Quit")
@@ -56,9 +31,10 @@ if __name__ == "__main__":
                     print(f"Please enter a number between 1 and {MAX_LEVEL}.")
                     continue
                 current_depth = level
-                bst = core_programs_module.BinarySearchTree(max_depth=MAX_LEVEL)
+                bst = cpm.BinarySearchTree(max_depth=MAX_LEVEL)
                 bst.build_full_tree(target_depth=level, low=0, high=1000)
-                render_tree(f"Built full BST to depth {level} (max depth = {MAX_LEVEL}).")
+                status = f"Built full BST to depth {level} (max depth = {MAX_LEVEL})."
+                cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                 # Interactive sub-menu for operations after building
                 while True:
                     print("\n-- Actions --")
@@ -70,6 +46,7 @@ if __name__ == "__main__":
 
                     if sub_choice == "4":
                         bst = None
+                        status = ""
                         break
 
                     if sub_choice == "1":
@@ -77,33 +54,40 @@ if __name__ == "__main__":
                             val = int(input("Value to insert: ").strip())
                             ok = bst.insert(val)
                             status = f"Inserted {val}." if ok else ("Insert blocked: duplicate value." if bst.search(val) else "Insert blocked: depth limit or no space.")
-                            render_tree(status)
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         except ValueError:
-                            render_tree("Invalid number.")
+                            status = "Invalid number."
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         continue
 
                     if sub_choice == "2":
                         try:
                             val = int(input("Value to delete: ").strip())
                             removed = bst.delete(val)
-                            render_tree("Deleted." if removed else "Value not found; nothing deleted.")
+                            status = "Deleted." if removed else "Value not found; nothing deleted."
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         except ValueError:
-                            render_tree("Invalid number.")
+                            status = "Invalid number."
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         continue
 
                     if sub_choice == "3":
                         try:
                             val = int(input("Value to search: ").strip())
                             found = bst.search(val)
-                            render_tree("Found." if found else "Not found.")
+                            status = "Found." if found else "Not found."
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         except ValueError:
-                            render_tree("Invalid number.")
+                            status = "Invalid number."
+                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                         continue
 
-                    render_tree("Invalid choice. Enter a number 1-4.")
+                    status = "Invalid choice. Enter a number 1-4."
+                    cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
                 continue
 
-            print("Invalid choice. Enter a number 1-2.")
-            render_tree("Invalid choice. Enter a number 1-2.")
+            status = "Invalid choice. Enter a number 1-2."
+            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
         except ValueError:
-            render_tree("Invalid input. Please try again.")
+            status = "Invalid input. Please try again."
+            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
