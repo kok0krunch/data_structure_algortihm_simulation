@@ -54,7 +54,7 @@ def generate_license_plate():
     return f"{letters}-{numbers}"
 
 
-def render_parking_grid(lanes, grid_rows=4, grid_cols=5):
+def render_parking_grid(lanes, grid_rows=4, grid_cols=4):
     """Render a visual parking grid showing occupied and empty spots.
     
     Args:
@@ -79,11 +79,14 @@ def render_parking_grid(lanes, grid_rows=4, grid_cols=5):
     print("\n" + "="*60)
     print("Parking Garage")
     print("="*60)
+    print("EXIT " + " "*45 + "ENTRANCE")
     for row_idx, row in enumerate(grid):
-        print(f"Lane {row_idx + 1}: ", end="")
+        lane = lanes[row_idx]
+        status_indicator = " [FULL]" if lane.isFull() else ""
+        print(f"Lane {row_idx + 1}{status_indicator}: ", end="")
         for spot in row:
             print(spot, end=" ")
-        print()
+        print(f" ({lane.size()}/4)")
     print("="*60 + "\n")
 
 
