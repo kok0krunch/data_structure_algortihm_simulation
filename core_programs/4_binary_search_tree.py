@@ -1,5 +1,8 @@
-# Binary Search Tree
-# Use class
+#Binary Search Tree
+#Import shared module for organization
+#Use core_programs_module to implement BST
+import core_programs_module
+
 class Node:
     def __init__(self,number): # Class attributes: top, left, right
         self.number=number
