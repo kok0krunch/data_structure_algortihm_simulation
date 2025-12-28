@@ -14,14 +14,35 @@ class BinaryTree:
         if self.root==None: # First number as root
             self.root=Node(number)
     
-    def preorder(Self): #organizes each item in the tree in the order: Top, left, right
-        pass
+    def preorder(self): #organizes each item in the tree in the order: Top, left, right
+        result = []
+        def traverse(node):
+            if node:
+                result.append(node.number)
+                traverse(node.left)
+                traverse(node.right)
+        traverse(self.root)
+        return result
 
     def inorder(self): #organizes each item in the tree in the order: left, top right
-        pass
+        result = []
+        def traverse(node):
+            if node:
+                traverse(node.left)
+                result.append(node.number)
+                traverse(node.right)
+        traverse(self.root)
+        return result
 
-    def postorder(Self): #organizes each item in the tree in the order: left, right, top
-        pass
+    def postorder(self): #organizes each item in the tree in the order: left, right, top
+        result = []
+        def traverse(node):
+            if node:
+                traverse(node.left)
+                traverse(node.right)
+                result.append(node.number)
+        traverse(self.root)
+        return result
 
 #Main Code
 #Definitions
