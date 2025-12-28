@@ -21,6 +21,58 @@ def generate_random_value(low: int = 0, high: int = 100) -> int:
     return random.randint(low, high)
 
 
+def pretty_print_diagonal(root, max_depth: int) -> None:
+    """Render a top-down view of a tree using diagonal connectors.
+    
+    Args:
+        root: The root node of the tree (must have .value, .left, .right attributes)
+        max_depth: Maximum depth of the tree for visualization sizing
+    """
+    if root is None:
+        print("<empty tree>")
+        return
+
+    def _height(node) -> int:
+        return 0 if node is None else 1 + max(_height(node.left), _height(node.right))
+
+    height = max(max_depth, _height(root))
+    width = max(2 ** (height + 2), 16)
+    rows = [list(" " * width) for _ in range(height * 2 - 1)]
+
+    def place(node, depth: int, x: int, gap: int) -> None:
+        node_row = depth * 2
+        val = str(node.value)
+        start = max(x - len(val) // 2, 0)
+        end = min(start + len(val), width)
+        rows[node_row][start:end] = val[: end - start]
+
+        if depth == height - 1:
+            return
+
+        connector_row = node_row + 1
+        child_gap = max(gap // 2, 1)
+
+        if node.left:
+            child_x = x - child_gap
+            for i in range(1, child_gap + 1):
+                pos = x - i
+                if 0 <= pos < width:
+                    rows[connector_row][pos] = "/"
+            place(node.left, depth + 1, child_x, child_gap)
+
+        if node.right:
+            child_x = x + child_gap
+            for i in range(1, child_gap + 1):
+                pos = x + i
+                if 0 <= pos < width:
+                    rows[connector_row][pos] = "\\"
+            place(node.right, depth + 1, child_x, child_gap)
+
+    place(root, 0, width // 2, width // 2)
+    for line in rows:
+        print("".join(line).rstrip())
+
+
 # === BST Implementation ===
 
 class Node:

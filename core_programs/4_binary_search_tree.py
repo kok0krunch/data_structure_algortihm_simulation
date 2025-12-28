@@ -3,53 +3,6 @@
 #Use core_programs_module to implement BST
 import core_programs_module
 
-#Render tree lines
-def pretty_print_diagonal(root, max_depth: int) -> None:
-    """Render a top-down view of the BST using diagonal connectors."""
-    if root is None:
-        print("<empty tree>")
-        return
-
-    def _height(node) -> int:
-        return 0 if node is None else 1 + max(_height(node.left), _height(node.right))
-
-    height = max(max_depth, _height(root))
-    width = max(2 ** (height + 2), 16)
-    rows = [list(" " * width) for _ in range(height * 2 - 1)]
-
-    def place(node, depth: int, x: int, gap: int) -> None:
-        node_row = depth * 2
-        val = str(node.value)
-        start = max(x - len(val) // 2, 0)
-        end = min(start + len(val), width)
-        rows[node_row][start:end] = val[: end - start]
-
-        if depth == height - 1:
-            return
-
-        connector_row = node_row + 1
-        child_gap = max(gap // 2, 1)
-
-        if node.left:
-            child_x = x - child_gap
-            for i in range(1, child_gap + 1):
-                pos = x - i
-                if 0 <= pos < width:
-                    rows[connector_row][pos] = "/"
-            place(node.left, depth + 1, child_x, child_gap)
-
-        if node.right:
-            child_x = x + child_gap
-            for i in range(1, child_gap + 1):
-                pos = x + i
-                if 0 <= pos < width:
-                    rows[connector_row][pos] = "\\"
-            place(node.right, depth + 1, child_x, child_gap)
-
-    place(root, 0, width // 2, width // 2)
-    for line in rows:
-        print("".join(line).rstrip())
-
 
 #Binary Search Tree Main Logic File
 if __name__ == "__main__":
@@ -73,7 +26,7 @@ if __name__ == "__main__":
         if bst is None or bst.root is None:
             print("<no tree built>")
         else:
-            pretty_print_diagonal(bst.root, MAX_LEVEL)
+            core_programs_module.pretty_print_diagonal(bst.root, MAX_LEVEL)
         print("==================================================")
 
     def ensure_tree() -> None:
