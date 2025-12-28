@@ -145,7 +145,8 @@ def main():
                 
                 # Check if lane is full
                 if lanes[lane_idx].isFull():
-                    print(f"Lane {lane_num} is full! Cannot park.")
+                    print(f"\n✗ ERROR: Lane {lane_num} is full. Cannot park.")
+                    input("Press Enter to continue...")
                     continue
                 
                 # Increment lane-specific arrival counter
@@ -163,6 +164,7 @@ def main():
                 print(f"\n✓ SUCCESS: Car {license_plate} added to Lane {lane_num}")
                 print(f"  Lane Arrival #: {lane_arrival_num}")
                 print(f"  Current Lane Occupancy: {lanes[lane_idx].size()}/4")
+                input("\nPress Enter to continue...")
             except ValueError:
                 print("Invalid input!")
         
@@ -182,6 +184,7 @@ def main():
                 lane_idx = lane_num - 1
                 if lanes[lane_idx].isEmpty():
                     print(f"\n✗ ERROR: Lane {lane_num} is empty. No car to remove.")
+                    input("Press Enter to continue...")
                 else:
                     # Increment lane-specific departure counter
                     lanes[lane_idx].departure_count += 1
@@ -193,6 +196,7 @@ def main():
                     print(f"\n✓ SUCCESS: Car {departed_car['plate']} removed from Lane {lane_num}")
                     print(f"  Lane Departure #: {lane_departure_num}")
                     print(f"  Current Lane Occupancy: {lanes[lane_idx].size()}/4")
+                    input("\nPress Enter to continue...")
             except ValueError:
                 print("Invalid input!")
         
