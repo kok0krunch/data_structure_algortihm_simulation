@@ -87,6 +87,95 @@ class Node:
         return f"Node({self.value})"
 
 
+# === Binary Tree (general) Implementation ===
+
+class BinaryTree:
+    """Basic binary tree with traversals and level-order builders."""
+
+    def __init__(self, max_depth: int = 5) -> None:
+        self.root: Optional[Node] = None
+        self.max_depth = max_depth
+
+    def insert(self, value: int) -> None:
+        """Insert by filling the first available slot in level order."""
+        new_node = Node(value)
+        if self.root is None:
+            self.root = new_node
+            return
+
+        queue: List[Node] = [self.root]
+        while queue:
+            current = queue.pop(0)
+            if current.left is None:
+                current.left = new_node
+                return
+            queue.append(current.left)
+            if current.right is None:
+                current.right = new_node
+                return
+            queue.append(current.right)
+
+    def build_full_tree(self, target_depth: int, low: int = 0, high: int = 1000) -> None:
+        """Build a complete binary tree up to target_depth with random values."""
+        if target_depth < 1 or target_depth > self.max_depth:
+            raise ValueError(f"target_depth must be between 1 and {self.max_depth}")
+
+        needed = 2 ** target_depth - 1
+        available = high - low + 1
+        if available < needed:
+            raise ValueError(f"Value range too small: need at least {needed} distinct ints, have {available}")
+
+        values = random.sample(range(low, high + 1), needed)
+        nodes = [Node(v) for v in values]
+        for idx, node in enumerate(nodes):
+            left_idx = 2 * idx + 1
+            right_idx = 2 * idx + 2
+            if left_idx < len(nodes):
+                node.left = nodes[left_idx]
+            if right_idx < len(nodes):
+                node.right = nodes[right_idx]
+        self.root = nodes[0] if nodes else None
+
+    def preorder(self) -> List[int]:
+        result: List[int] = []
+
+        def traverse(node: Optional[Node]) -> None:
+            if node is None:
+                return
+            result.append(node.value)
+            traverse(node.left)
+            traverse(node.right)
+
+        traverse(self.root)
+        return result
+
+    def inorder(self) -> List[int]:
+        result: List[int] = []
+
+        def traverse(node: Optional[Node]) -> None:
+            if node is None:
+                return
+            traverse(node.left)
+            result.append(node.value)
+            traverse(node.right)
+
+        traverse(self.root)
+        return result
+
+    def postorder(self) -> List[int]:
+        result: List[int] = []
+
+        def traverse(node: Optional[Node]) -> None:
+            if node is None:
+                return
+            traverse(node.left)
+            traverse(node.right)
+            result.append(node.value)
+
+        traverse(self.root)
+        return result
+
+
 class BinarySearchTree:
     """Binary Search Tree model with depth-limited operations.
 
