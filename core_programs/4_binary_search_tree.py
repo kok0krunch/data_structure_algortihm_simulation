@@ -89,14 +89,11 @@ if __name__ == "__main__":
             render_tree()
             print("\n==================== BST MENU ====================")
             print(" 1) Build full tree (depth 1-5)")
-            print(" 2) Insert a value")
-            print(" 3) Delete a value")
-            print(" 4) Search for a value")
-            print(" 5) Quit")
+            print(" 2) Quit")
             print("================================================")
-            choice = input("Select an option (1-5): ").strip()
+            choice = input("Select an option (1-2): ").strip()
 
-            if choice == "5":
+            if choice == "2":
                 break
 
             if choice == "1":
@@ -153,29 +150,7 @@ if __name__ == "__main__":
                     render_tree("Invalid choice. Enter a number 1-4.")
                 continue
 
-            if choice == "2":
-                ensure_tree()
-                val = int(input("Value to insert: ").strip())
-                ok = bst.insert(val)
-                status = f"Inserted {val}." if ok else ("Insert blocked: duplicate value." if bst.search(val) else "Insert blocked: depth limit or no space.")
-                render_tree(status)
-                continue
-
-            if choice == "3":
-                ensure_tree()
-                val = int(input("Value to delete: ").strip())
-                removed = bst.delete(val)
-                render_tree("Deleted." if removed else "Value not found; nothing deleted.")
-                continue
-
-            if choice == "4":
-                ensure_tree()
-                val = int(input("Value to search: ").strip())
-                found = bst.search(val)
-                render_tree("Found." if found else "Not found.")
-                continue
-
-            print("Invalid choice. Enter a number 1-5.")
-            render_tree("Invalid choice. Enter a number 1-5.")
+            print("Invalid choice. Enter a number 1-2.")
+            render_tree("Invalid choice. Enter a number 1-2.")
         except ValueError:
             render_tree("Invalid input. Please try again.")
