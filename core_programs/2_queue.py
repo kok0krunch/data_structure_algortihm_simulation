@@ -109,51 +109,9 @@ def print_menu():
     print("="*50)
 
 
-def display_parking_table(lanes):
-    """Display formatted table with parking information"""
-    print("\n" + "="*90)
-    print(f"{'License Plate':<15} {'Arrival #':<12} {'Departure #':<15} {'Status':<45}")
-    print("="*90)
-    
-    # Collect all cars from all lanes
-    all_cars = []
-    for lane_id, lane in enumerate(lanes, 1):
-        for position, (index, car_data) in enumerate(lane.items.items()):
-            status = f"Lane {lane_id} - {'Front' if position == 0 else f'Position {position}'}"
-            all_cars.append({
-                'plate': car_data['plate'],
-                'arrival': car_data['arrival_num'],
-                'departure': car_data.get('departure_num', '-'),
-                'status': status
-            })
-    
-    # Display departed cars first
-    if hasattr(display_parking_table, 'departed_cars'):
-        for car in display_parking_table.departed_cars:
-            departure_str = str(car['departure_num']) if car['departure_num'] else '-'
-            print(f"{car['plate']:<15} {car['arrival_num']:<12} {departure_str:<15} {'Departed':<45}")
-    
-    # Display parked cars
-    for car in all_cars:
-        departure_str = str(car['departure']) if car['departure'] != '-' else '-'
-        print(f"{car['plate']:<15} {car['arrival']:<12} {departure_str:<15} {car['status']:<45}")
-    
-    print("="*90)
-    print("="*90)
-    
-    # Display lane statistics at the bottom
-    print("\nLane Statistics:")
-    for lane in lanes:
-        print(f"  Lane {lane.lane_id}: Arrivals: {lane.arrival_count} | Departures: {lane.departure_count}")
-    print("="*90 + "\n")
-
-
 def main():
     # Initialize 4 parking lanes with lane-specific counters
     lanes = [Queue(i+1) for i in range(4)]
-    
-    # Store departed cars with their lane information
-    display_parking_table.departed_cars = []
     
     while True:
         cpm.clear_console()
@@ -202,8 +160,9 @@ def main():
                 }
                 
                 lanes[lane_idx].enqueue(car_data)
-                print(f"✓ Car {license_plate} parked successfully in Lane {lane_num}")
+                print(f"\n✓ SUCCESS: Car {license_plate} added to Lane {lane_num}")
                 print(f"  Lane Arrival #: {lane_arrival_num}")
+                print(f"  Current Lane Occupancy: {lanes[lane_idx].size()}/4")
             except ValueError:
                 print("Invalid input!")
         
@@ -222,7 +181,7 @@ def main():
                 
                 lane_idx = lane_num - 1
                 if lanes[lane_idx].isEmpty():
-                    print(f"Lane {lane_num} is empty!")
+                    print(f"\n✗ ERROR: Lane {lane_num} is empty. No car to remove.")
                 else:
                     # Increment lane-specific departure counter
                     lanes[lane_idx].departure_count += 1
@@ -231,10 +190,9 @@ def main():
                     departed_car = lanes[lane_idx].dequeue()
                     departed_car['departure_num'] = lane_departure_num
                     
-                    display_parking_table.departed_cars.append(departed_car)
-                    
-                    print(f"✓ Car {departed_car['plate']} departed from Lane {lane_num}")
+                    print(f"\n✓ SUCCESS: Car {departed_car['plate']} removed from Lane {lane_num}")
                     print(f"  Lane Departure #: {lane_departure_num}")
+                    print(f"  Current Lane Occupancy: {lanes[lane_idx].size()}/4")
             except ValueError:
                 print("Invalid input!")
         
