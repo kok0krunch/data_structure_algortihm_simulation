@@ -15,21 +15,21 @@ clock = pygame.time.Clock()
 """ load images """
 
 # start elements
-activities_img = pygame.image.load("images/activities_img.png").convert_alpha()
-bst_img = pygame.image.load("images/bst_img.png")
-bt_img = pygame.image.load("images/bt_img.png")
-queue_img = pygame.image.load("images/queue_img.png")
-recursion_img = pygame.image.load("images/recursion_img.png")
-stacks_img = pygame.image.load("images/stacks_img.png")
-back_img = pygame.image.load("images/back_img.png")
+activities_img = pygame.image.load("data_structure_algortihm_simulation/images/activities_img.png").convert_alpha()
+bst_img = pygame.image.load("data_structure_algortihm_simulation/images/bst_img.png")
+bt_img = pygame.image.load("data_structure_algortihm_simulation/images/bt_img.png")
+queue_img = pygame.image.load("data_structure_algortihm_simulation/images/queue_img.png")
+recursion_img = pygame.image.load("data_structure_algortihm_simulation/images/recursion_img.png")
+stacks_img = pygame.image.load("data_structure_algortihm_simulation/images/stacks_img.png")
+back_img = pygame.image.load("data_structure_algortihm_simulation/images/back_img.png")
 
 # main menu elements
-start_img = pygame.image.load("images/start_img.png")
-exit_img = pygame.image.load("images/exit_img.png")
-gametitle_img = pygame.image.load("images/gametitle_img.png").convert_alpha()
+start_img = pygame.image.load("data_structure_algortihm_simulation/images/start_img.png")
+exit_img = pygame.image.load("data_structure_algortihm_simulation/images/exit_img.png")
+gametitle_img = pygame.image.load("data_structure_algortihm_simulation/images/gametitle_img.png").convert_alpha()
 
 # game background image
-globalbg_img = pygame.image.load("images/globalbg_img.jpg")
+globalbg_img = pygame.image.load("data_structure_algortihm_simulation/images/globalbg_img.jpg")
 globalbg_img= pygame.transform.scale(globalbg_img,(1366, 768))  # scale image to fit the game window
 
 """ class for button functionality """
