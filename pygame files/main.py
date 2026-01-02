@@ -99,7 +99,7 @@ def main_menu():
                 running = False
 
         # show global background image
-        screen.blit(globalbg_img)
+        screen.blit(globalbg_img, (0, 0))
         screen.blit(gametitle_img, (380, -60))  # the offset is -125 for y coordinate
 
         # RENDER YOUR GAME HERE
@@ -128,7 +128,7 @@ def start_menu():
                 return False
 
         # show global background image
-        screen.blit(globalbg_img)
+        screen.blit(globalbg_img, (0, 0))
         screen.blit(activities_img, (380, -60))  # the offset is -125 for y coordinate
 
         # RENDER YOUR GAME HERE
