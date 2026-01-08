@@ -40,23 +40,30 @@ class BinarySearchTree:
 
 #definitions
 def input_number():
-    try:
-        user_input=int(input("Enter number:"))
-        binary_search_tree.insert(user_input)
-    except:
-        print("You have entered a non-integer/have typed done. Creating tree") # If number is reached/ user typed done. Print tree
-        binary_search_tree.print_tree()
+    while True:
+        user_input=input("Enter number(or type 'done'):")
+        if user_input.lower()=="done": #programs prints tree when user types done
+            print("You have typed 'Done'. Creating tree...")
+            binary_search_tree.print_tree()
+            break #stops loop
+        try:
+            inputted=int(user_input)
+            binary_search_tree.insert(inputted)
+            binary_search_tree.print_tree()
+        except:
+            print("Invalid input. You have entered a non-integer and did not type 'Done'") # If user did not type a number or did not type done, program continues to ask for input.
+            binary_search_tree.print_tree()
 
 # main program
 inputted_number=0
+max_input=31
 binary_search_tree=BinarySearchTree()
-while inputted_number!=31:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
-    input_number()
+
+while inputted_number<max_input:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
+    if not input_number():
+        break
     inputted_number+=1
 
-if inputted_number==100:
+if inputted_number==max_input:
     print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
     binary_search_tree.print_tree()
-    exit
-else:
-    exit
