@@ -69,3 +69,10 @@ class TowerOfHanoi:
         self.tower_three_to_tower_two(int(user_input) - 1, tower_3, tower_2, tower_1)
         self.moves.append((tower_3, tower_2))
         self.tower_three_to_tower_two(int(user_input) - 1, tower_1, tower_3, tower_2)
+
+def draw_pegs(screen):
+    peg_width = 60
+    peg_height = 280
+    peg_dimensions = pygame.transform.scale(peg_img, peg_width, peg_height)
+    for x in peg_x_placement.values():
+        screen.blit(peg_img, (x - peg_img.get_width() // 2, 120))
