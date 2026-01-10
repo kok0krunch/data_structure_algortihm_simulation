@@ -93,3 +93,99 @@ def draw_disks(screen, towers):
             peg_x = peg_x_placement[peg] - peg_img.get_width() // 2
             peg_y = peg_y_placement - (i+1) * img.get_height()
             screen.blit(img, (peg_x, peg_y))
+
+def main():
+    screen = pygame.display.set_mode((900, 500))
+    pygame.display.set_caption("Tower of Hanoi")
+
+    font = pygame.font.SysFont(None, 32)
+
+    num_disks = 0
+    origin = 0
+    destination = 0
+    stage = 0
+    user_input = ""
+
+    while stage < 3:
+        screen.fill(white)
+
+        if stage == 0:
+            text = font.render("Enter number of disks (1-7): " + user_input, True, black)
+        elif stage == 1:
+            text = font.render("Enter origin tower (1,2,3): " + user_input, True, black)
+        else:
+            text = font.render("Enter destination tower (1,2,3): " + user_input, True, black)
+
+        draw_pegs(screen)
+        draw_disks(screen, towers)
+
+        screen.blit(text, (50, 200))
+        pygame.display.flip()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:
+                    if stage == 0:
+                        num_disks = int(user_input)
+                        if 1 <= num_disks <= max_disks:
+                            stage += 1
+                            user_input = ""
+                    elif stage == 1:
+                            origin = int(user_input)
+                            stage += 1
+                            user_input = ""
+                    else:
+                        destination = int(user_input)
+                        stage += 1
+                elif event.unicode.isdigit():
+                    user_input += event.unicode
+
+    towers = {1: list(range(num_disks, 0, -1)) if origin == 1 else [],2: list(range(num_disks, 0, -1)) if origin == 2 else [],
+        3: list(range(num_disks, 0, -1)) if origin == 3 else []}
+
+    hanoi = TowerOfHanoi()
+
+    if origin == 1 and destination == 2:
+        hanoi.tower_one_to_tower_two(num_disks, 1, 2, 3)
+    elif origin == 1 and destination == 3:
+        hanoi.tower_one_to_tower_three(num_disks, 1, 2, 3)
+    elif origin == 2 and destination == 1:
+        hanoi.tower_two_to_tower_one(num_disks, 2, 3, 1)
+    elif origin == 2 and destination == 3:
+        hanoi.tower_two_to_tower_three(num_disks, 2, 1, 3)
+    elif origin == 3 and destination == 1:
+        hanoi.tower_three_to_tower_one(num_disks, 3, 2, 1)
+    elif origin == 3 and destination == 2:
+        hanoi.tower_three_to_tower_two(num_disks, 3, 1, 2)
+
+    move_index = 0
+    last_move = time.time()
+    clock = pygame.time.Clock()
+
+    while True:
+        screen.fill((250, 250, 250))
+        draw_pegs(screen)
+        draw_disks(screen, towers)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+
+        if move_index < len(hanoi.moves):
+            if time.time() - last_move > move_delay:
+                src, dst = hanoi.moves[move_index]
+                disk = towers[src].pop()
+                towers[dst].append(disk)
+                move_index += 1
+                last_move = time.time()
+
+        pygame.display.flip()
+        clock.tick(60)
+
+if __name__ == "__main__":
+    main()
