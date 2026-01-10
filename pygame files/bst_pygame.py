@@ -13,7 +13,12 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(globalbg_img, (0, 0))
 
         # RENDER YOUR BINARY SEARCH TREE CONTENT HERE
-        
+        width = screen.get_width()
+        height = screen.get_height()
+        x_center=width//2
+        y_center=height//2
+        pygame.draw.circle(screen, (255,0,0), (x_center,y_center), 100, width=0)
+
         # Draw back button
         if back_btn.draw():
             running = False
