@@ -76,3 +76,20 @@ def draw_pegs(screen):
     peg_dimensions = pygame.transform.scale(peg_img, peg_width, peg_height)
     for x in peg_x_placement.values():
         screen.blit(peg_img, (x - peg_img.get_width() // 2, 120))
+
+def draw_disks(screen, towers):
+    disk_images = {}
+    base_width = 60
+    width_step = 25
+    disk_height = disk_img.get_height()
+
+    for disk in range(1, max_disks + 1):
+        width = base_width + (disk - 1) * width_step
+        disk_images[disk] = pygame.transform.scale(disk_img,(width, disk_height))
+
+    for peg, disks in towers.items():
+        for i, disk in enumerate(disks):
+            img = disk_images[disk]
+            peg_x = peg_x_placement[peg] - peg_img.get_width() // 2
+            peg_y = peg_y_placement - (i+1) * img.get_height()
+            screen.blit(img, (peg_x, peg_y))
