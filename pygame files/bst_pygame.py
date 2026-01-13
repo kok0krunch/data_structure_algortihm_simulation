@@ -14,6 +14,8 @@ from binary_search_tree import BinarySearchTree
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
+    user_input = ""
+    bst = BinarySearchTree()
     running = True
     while running:
 
@@ -34,12 +36,19 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                 if event.key == pygame.K_RETURN:  # Enter key
                     if user_input != "":
                         number = int(user_input)
-                        binary_search_tree.insert(number)  # insert into BST
-                        pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
-                        font = pygame.font.SysFont(None, 30)
-                        text = font.render("5", True, (255, 255, 255))
-                        text_rect = text.get_rect(center=(x_intercept, y_intercept))
-                        screen.blit(text, text_rect)
+                        bst.insert(number)  # insert into BST
+                        if bst.root is not None:
+                            positions = {}
+                            get_positions(bst.root, screen.get_width()//2, 50, 200, positions)
+                            draw_edges(screen, bst.root, positions)
+                            draw_nodes(screen, bst.root, positions)
+
+                            # Draw what the user is currently typing
+                            pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
+                            font = pygame.font.SysFont(None, 32)
+                            text_rect = text.get_rect(center=(x_intercept, y_intercept))
+                            screen.blit(text, text_rect)
+                    
                         user_input = ""  # clear for next input
                 elif event.key == pygame.K_BACKSPACE:  # allow deleting
                     user_input = user_input[:-1]
