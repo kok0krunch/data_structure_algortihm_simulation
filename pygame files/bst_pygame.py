@@ -2,19 +2,13 @@ import pygame
 import sys
 import os
 
-print("DEBUG: bst_pygame.py is running")
-
 current_dir = os.path.dirname(__file__)
 
 bst_path = os.path.abspath(
     os.path.join(current_dir, "..", "core_programs", "core_programs")
 )
 
-print("BST PATH:", bst_path)
-
 sys.path.append(bst_path)
-
-print("SYS.PATH:", sys.path)
 
 from binary_search_tree import BinarySearchTree
 
