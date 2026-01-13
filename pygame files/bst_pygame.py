@@ -36,6 +36,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     bst = BinarySearchTree()
     font = pygame.font.SysFont(None, 26)
     input_box_img = pygame.image.load("images/bst_input_box.png").convert_alpha()
+    input_box_img = pygame.transform.scale(input_box_img, (300, 300)) 
     input_box_rect = input_box_img.get_rect()
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
     
