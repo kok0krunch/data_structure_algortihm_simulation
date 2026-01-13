@@ -1,93 +1,69 @@
-#Binary Search Tree
-#Import shared module for organization
-#Use core_programs_module to implement BST
-import core_programs_module as cpm
+# Binary Search Tree
+# Use class
+class Node:
+    def __init__(self,number): # Class attributes: top, left, right
+        self.number=number
+        self.left=None
+        self.right=None
 
+class BinarySearchTree: 
+    def __init__(self):
+        self.root=None
 
-#Binary Search Tree Main Logic File
-if __name__ == "__main__":
-    bst = None
-    MAX_LEVEL = 5
-    current_depth = MAX_LEVEL
-    status = ""
+    # Functions needed
+    def insert(self, number):
+        if self.root==None: # First number as root
+            self.root=Node(number)
+        else: # Determine if number is bigger or smaller
+            self.branching(self.root,number)
 
+    def branching(self,current,number):
+        if number<=current.number: # smaller/equal = left
+            if current.left is None:
+                current.left=Node(number) # Traverse the tree until it reaches an empty node
+            else:
+                self.branching(current.left,number)  # Insert in binary tree
+        else: # bigger = right
+            if current.right is None:
+                current.right=Node(number) # Traverse the tree until it reaches an empty node
+            else:
+                self.branching(current.right,number) # Insert in binary tree
+
+    def print_tree(self): #show the tree
+        self._print_tree(self.root, 0)
+
+    def _print_tree(self, node, level):
+        if node is not None:
+            self._print_tree(node.right, level + 2)
+            print("   " * level + str(node.number))
+            self._print_tree(node.left, level + 2)
+
+#definitions
+def input_number():
     while True:
+        user_input=input("Enter number(or type 'done'):")
+        if user_input.lower()=="done": #programs prints tree when user types done
+            print("You have typed 'Done'. Creating tree...")
+            binary_search_tree.print_tree()
+            break #stops loop
         try:
-            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-            status = ""
-            print("\n==================== BST MENU ====================")
-            print(" 1) Build full tree (depth 1-5)")
-            print(" 2) Quit")
-            print("================================================")
-            choice = input("Select an option (1-2): ").strip()
+            inputted=int(user_input)
+            binary_search_tree.insert(inputted)
+            binary_search_tree.print_tree()
+        except:
+            print("Invalid input. You have entered a non-integer and did not type 'Done'") # If user did not type a number or did not type done, program continues to ask for input.
+            binary_search_tree.print_tree()
 
-            if choice == "2":
-                break
+# main program
+inputted_number=0
+max_input=31
+binary_search_tree=BinarySearchTree()
 
-            if choice == "1":
-                level_raw = input("Select tree depth (1-5): ").strip()
-                level = int(level_raw)
-                if level < 1 or level > MAX_LEVEL:
-                    print(f"Please enter a number between 1 and {MAX_LEVEL}.")
-                    continue
-                current_depth = level
-                bst = cpm.BinarySearchTree(max_depth=MAX_LEVEL)
-                bst.build_full_tree(target_depth=level, low=0, high=1000)
-                status = f"Built full BST to depth {level} (max depth = {MAX_LEVEL})."
-                cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                # Interactive sub-menu for operations after building
-                while True:
-                    print("\n-- Actions --")
-                    print(" 1) Insert a value")
-                    print(" 2) Delete a value")
-                    print(" 3) Search for a value")
-                    print(" 4) Back to main menu")
-                    sub_choice = input("Select an option (1-4): ").strip()
+while inputted_number<max_input:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
+    if not input_number():
+        break
+    inputted_number+=1
 
-                    if sub_choice == "4":
-                        bst = None
-                        status = ""
-                        break
-
-                    if sub_choice == "1":
-                        try:
-                            val = int(input("Value to insert: ").strip())
-                            ok = bst.insert(val)
-                            status = f"Inserted {val}." if ok else ("Insert blocked: duplicate value." if bst.search(val) else "Insert blocked: depth limit or no space.")
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        except ValueError:
-                            status = "Invalid number."
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        continue
-
-                    if sub_choice == "2":
-                        try:
-                            val = int(input("Value to delete: ").strip())
-                            removed = bst.delete(val)
-                            status = "Deleted." if removed else "Value not found; nothing deleted."
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        except ValueError:
-                            status = "Invalid number."
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        continue
-
-                    if sub_choice == "3":
-                        try:
-                            val = int(input("Value to search: ").strip())
-                            found = bst.search(val)
-                            status = "Found." if found else "Not found."
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        except ValueError:
-                            status = "Invalid number."
-                            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                        continue
-
-                    status = "Invalid choice. Enter a number 1-4."
-                    cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-                continue
-
-            status = "Invalid choice. Enter a number 1-2."
-            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
-        except ValueError:
-            status = "Invalid input. Please try again."
-            cpm.render_tree_view("BST VIEW", bst, MAX_LEVEL, current_depth, status)
+if inputted_number==max_input:
+    print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
+    binary_search_tree.print_tree()
