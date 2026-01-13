@@ -3,19 +3,23 @@ import sys
 import os
 
 current_dir = os.path.dirname(__file__)
-
-bst_path = os.path.abspath(
-    os.path.join(current_dir, "..", "core_programs", "core_programs")
-)
-
+bst_path = os.path.abspath(os.path.join(current_dir, "..", "core_programs", "core_programs"))
 sys.path.append(bst_path)
-
 from binary_search_tree import BinarySearchTree
+
+def draw_bst(screen, node, x, y, font):
+    if node is None:
+        return
+    pygame.draw.circle(screen, (0, 120, 255), (x, y), 22) # draw circle for node
+    text = font.render(str(node.number), True, (255, 255, 255)) 
+    screen.blit(text, text.get_rect(center=(x, y))) #shows node text in screen
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
     user_input = ""
     bst = BinarySearchTree()
+    font = pygame.font.SysFont(None, 26)
+    
     running = True
     while running:
 
@@ -43,20 +47,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                 elif event.unicode.isdigit():  # allow only digits
                     user_input += event.unicode
         
-        if bst.root is not None:
-            if bst.left: #left: lower/equal to root
-                pygame.draw.circle(screen, (255,0,0), (x_intercept-25,y_intercept+25), 50, width=0)
-                font = pygame.font.SysFont(None, 30)
-                text = font.render(str(bst.root.number), True, (255, 255, 255))
-                text_rect = text.get_rect(center=(x_intercept, y_intercept))
-                screen.blit(text, text_rect)
-            
-            else:
-                pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
-                font = pygame.font.SysFont(None, 30)
-                text = font.render(str(bst.root.number), True, (255, 255, 255))
-                text_rect = text.get_rect(center=(x_intercept, y_intercept))
-                screen.blit(text, text_rect)
+        if bst.root:
+            draw_bst(screen, bst.root, screen.get_width()//2, 120, font)
+
         # Draw back button
         if back_btn.draw():
             running = False
