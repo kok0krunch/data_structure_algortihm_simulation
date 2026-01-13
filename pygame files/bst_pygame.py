@@ -42,10 +42,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         # show global background image
         screen.blit(globalbg_img, (0, 0))
 
-        # RENDER YOUR BINARY SEARCH TREE CONTENT HERE
-        width = screen.get_width()
-        height = screen.get_height()
-
+        # RENDER YOUR BINARY SEARCH TREE CONTENT HERErf
         for event in pygame.event.get():# poll for events
             if event.type == pygame.QUIT:
                 return False
@@ -62,7 +59,12 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root:
-            draw_bst(screen, bst.root, screen.get_width()//2, 120, font)
+            draw_bst(screen, bst.root, screen.get_width()//2, 180, font)
+
+        input_surface = font.render("Input: " + user_input, True, (0, 0, 0))
+        input_rect = input_surface.get_rect(
+        center=(screen.get_width() // 2, screen.get_height() - 30))
+        screen.blit(input_surface, input_rect)
 
         # Draw back button
         if back_btn.draw():
