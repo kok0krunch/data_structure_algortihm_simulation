@@ -10,9 +10,15 @@ from binary_search_tree import BinarySearchTree
 def draw_bst(screen, node, x, y, font):
     if node is None:
         return
-    pygame.draw.circle(screen, (0, 120, 255), (x, y), 22) # draw circle for node
-    text = font.render(str(node.number), True, (255, 255, 255)) 
-    screen.blit(text, text.get_rect(center=(x, y))) #shows node text in screen
+    pygame.draw.circle(screen, (0, 120, 255), (x, y), 100) # draw circle for node
+    text = font.render(str(node.number), True, (255, 255, 255)) #determines characteristic of text
+    screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
+
+    if node.left: #left child, number is lower/ equal to root.
+        pygame.draw.circle(screen, (0, 120, 255), (x, y), 100) # draw circle for node
+        pygame.draw.line(screen, (0, 0, 0), (x, y), (x - 80, y + 70), 2)
+        draw_bst(screen, node.left, x - 80, y + 70, font)
+        screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
@@ -29,8 +35,6 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         # RENDER YOUR BINARY SEARCH TREE CONTENT HERE
         width = screen.get_width()
         height = screen.get_height()
-        x_intercept=width//2
-        y_intercept=height//6
 
         for event in pygame.event.get():# poll for events
             if event.type == pygame.QUIT:
