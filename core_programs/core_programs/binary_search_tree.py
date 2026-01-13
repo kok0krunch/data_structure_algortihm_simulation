@@ -59,11 +59,12 @@ inputted_number=0
 max_input=31
 binary_search_tree=BinarySearchTree()
 
-while inputted_number<max_input:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
-    if not input_number():
-        break
-    inputted_number+=1
+if __name__ == "__main__":
+    while inputted_number<max_input:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
+        if not input_number():
+            break
+        inputted_number+=1
 
-if inputted_number==max_input:
-    print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
-    binary_search_tree.print_tree()
+        if inputted_number==max_input:
+            print("You have reached the maximum amount of inputs. Creating tree.") # If number is reached/ user typed done. Print tree
+            binary_search_tree.print_tree()
