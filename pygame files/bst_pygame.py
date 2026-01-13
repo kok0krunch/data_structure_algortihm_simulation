@@ -29,6 +29,19 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         height = screen.get_height()
         x_intercept=width//2
         y_intercept=height//6
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN:  # Enter key
+                    if user_input != "":
+                        number = int(user_input)
+                        binary_search_tree.insert(number)  # insert into BST
+                        user_input = ""  # clear for next input
+                elif event.key == pygame.K_BACKSPACE:  # allow deleting
+                    user_input = user_input[:-1]
+                elif event.unicode.isdigit():  # allow only digits
+                    user_input += event.unicode
+
         pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
         font = pygame.font.SysFont(None, 30)
         text = font.render("5", True, (255, 255, 255))
