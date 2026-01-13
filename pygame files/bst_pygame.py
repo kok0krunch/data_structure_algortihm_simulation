@@ -1,4 +1,22 @@
 import pygame
+import sys
+import os
+
+print("DEBUG: bst_pygame.py is running")
+
+current_dir = os.path.dirname(__file__)
+
+bst_path = os.path.abspath(
+    os.path.join(current_dir, "..", "core_programs", "core_programs")
+)
+
+print("BST PATH:", bst_path)
+
+sys.path.append(bst_path)
+
+print("SYS.PATH:", sys.path)
+
+from binary_search_tree import BinarySearchTree
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
@@ -15,9 +33,13 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         # RENDER YOUR BINARY SEARCH TREE CONTENT HERE
         width = screen.get_width()
         height = screen.get_height()
-        x_center=width//2
-        y_center=height//2
-        pygame.draw.circle(screen, (255,0,0), (x_center,y_center), 100, width=0)
+        x_intercept=width//2
+        y_intercept=height//6
+        pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
+        font = pygame.font.SysFont(None, 30)
+        text = font.render("5", True, (255, 255, 255))
+        text_rect = text.get_rect(center=(x_intercept, y_intercept))
+        screen.blit(text, text_rect)
 
         # Draw back button
         if back_btn.draw():
