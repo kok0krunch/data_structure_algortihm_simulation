@@ -44,12 +44,19 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root is not None:
-            pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
-            font = pygame.font.SysFont(None, 30)
-            text = font.render(str(bst.root.number), True, (255, 255, 255))
-            text_rect = text.get_rect(center=(x_intercept, y_intercept))
-            screen.blit(text, text_rect)
-
+            if bst.left: #left: lower/equal to root
+                pygame.draw.circle(screen, (255,0,0), (x_intercept-25,y_intercept+25), 50, width=0)
+                font = pygame.font.SysFont(None, 30)
+                text = font.render(str(bst.root.number), True, (255, 255, 255))
+                text_rect = text.get_rect(center=(x_intercept, y_intercept))
+                screen.blit(text, text_rect)
+            
+            else:
+                pygame.draw.circle(screen, (255,0,0), (x_intercept,y_intercept), 50, width=0)
+                font = pygame.font.SysFont(None, 30)
+                text = font.render(str(bst.root.number), True, (255, 255, 255))
+                text_rect = text.get_rect(center=(x_intercept, y_intercept))
+                screen.blit(text, text_rect)
         # Draw back button
         if back_btn.draw():
             running = False
