@@ -35,6 +35,10 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     user_input = ""
     bst = BinarySearchTree()
     font = pygame.font.SysFont(None, 26)
+    input_box_img = pygame.image.load("images/bst_input_box.png").convert_alpha()
+    input_box_rect = input_box_img.get_rect()
+    input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
+    
     
     running = True
     while running:
@@ -61,6 +65,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2, 180, font)
 
+        screen.blit(input_box_img, input_box_rect)
         input_surface = font.render("Input: " + user_input, True, (0, 0, 0))
         input_rect = input_surface.get_rect(
         center=(screen.get_width() // 2, screen.get_height() - 30))
