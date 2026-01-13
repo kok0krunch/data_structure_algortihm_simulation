@@ -21,9 +21,9 @@ def draw_bst(screen, node, x, y, font):
         screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
     
     if node.right: #right child, number is higher than the root.
-        pygame.draw.circle(screen, (0, 120, 255), (x, y), 500) # draw circle for node
-        pygame.draw.line(screen, (0, 0, 0), (x, y), (x - 80, y + 70), 2)
-        draw_bst(screen, node.left, x + 80, y + 70, font)
+        pygame.draw.circle(screen, (0, 120, 255), (x, y), 50) # draw circle for node
+        pygame.draw.line(screen, (0, 0, 0), (x, y), (x + 80, y + 70), 2)
+        draw_bst(screen, node.right, x + 80, y + 70, font)
         screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
