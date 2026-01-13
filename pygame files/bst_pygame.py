@@ -7,7 +7,7 @@ bst_path = os.path.abspath(os.path.join(current_dir, "..", "core_programs", "cor
 sys.path.append(bst_path)
 from binary_search_tree import BinarySearchTree
 
-def draw_bst(screen, node, x, y, font):
+def draw_bst(screen, node, x, y, level, font):
     if node is None:
         return
     pygame.draw.circle(screen, (0, 120, 255), (x, y), 50) # draw circle for node
@@ -17,13 +17,13 @@ def draw_bst(screen, node, x, y, font):
     if node.left: #left child, number is lower/ equal to root.
         pygame.draw.circle(screen, (0, 120, 255), (x, y), 50) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (x - 100, y + 100), 2)
-        draw_bst(screen, node.left, x - 80, y + 70, font)
+        draw_bst(screen, node.left, x - 80, y + 70, level+1, font)
         screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
     
     if node.right: #right child, number is higher than the root.
         pygame.draw.circle(screen, (0, 120, 255), (x, y), 50) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (x + 100, y + 100), 2)
-        draw_bst(screen, node.right, x + 80, y + 70, font)
+        draw_bst(screen, node.right, x + 80, y + 70, level+1, font)
         screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
@@ -58,7 +58,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root:
-            draw_bst(screen, bst.root, screen.get_width()//2, 120, font)
+            draw_bst(screen, bst.root, screen.get_width()//2, 120, 0, font)
 
         # Draw back button
         if back_btn.draw():
