@@ -81,7 +81,15 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root:
-            draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 80+tree_offset_y, font)
+            draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
+            
+        instruction_font = pygame.font.SysFont(None, 48)
+        instruction = "Welcome to Binary Search Tree maker! Input your number and enter to\n see it in front of you. If your binary search tree is cut off screen, use your \n up, left, down, and right keys to maneuver the tree. "
+        instruction_surface = instruction_font.render(instruction, True, (0,0,0))
+        x_margin=180
+        y_margin=20
+        instruction_rect = instruction_surface.get_rect(topleft=(x_margin,y_margin))
+        screen.blit(instruction_surface, instruction_rect)
 
         screen.blit(input_box_img, input_box_rect)
         input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
