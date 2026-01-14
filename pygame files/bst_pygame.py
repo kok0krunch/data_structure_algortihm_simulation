@@ -8,22 +8,21 @@ sys.path.append(bst_path)
 from binary_search_tree import BinarySearchTree
 
 def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=100):
-    node_img = pygame.image.load("images/bst_node.png").convert_alpha()
-    node_img = pygame.transform.scale(node_img, (150, 150))
     if node is None:
         return
+    node_img = pygame.image.load("images/bst_node.png").convert_alpha()
+    node_img = pygame.transform.scale(node_img, (150, 150))
     node_rect = node_img.get_rect(center=(x, y+15))
     screen.blit(node_img, node_rect)
-    text = font.render(str(node.number), True, (255, 255, 255)) #determines characteristic of text
-    screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
-
+    text = font.render(str(node.number), True, (0, 0, 0)) #shows text in screen
+    screen.blit(text, text.get_rect(center=(x, y)))
+    
     if node.left: #left child, number is lower/ equal to root.
         child_x = x - h_spacing
         child_y = y + v_spacing
         new_h_spacing=max(h_spacing/2,30)
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         node_rect = node_img.get_rect(center=(child_x, child_y))
-        screen.blit(node_img, node_rect)
         draw_bst(screen, node.left, child_x, child_y, font, new_h_spacing, v_spacing)
     
     if node.right: #right child, number is higher than the root.
@@ -32,7 +31,6 @@ def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=100):
         new_h_spacing=max(h_spacing/2,30)
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         node_rect = node_img.get_rect(center=(child_x, child_y))
-        screen.blit(node_img, node_rect)
         draw_bst(screen, node.right, child_x, child_y, font, new_h_spacing, v_spacing)
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
