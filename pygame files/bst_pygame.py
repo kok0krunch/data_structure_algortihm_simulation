@@ -20,7 +20,6 @@ def draw_bst(screen, node, x, y, font, h_spacing=120, v_spacing=300):
         pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 50) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         draw_bst(screen, node.left, child_x, child_y, font, h_spacing / 1.5, v_spacing)
-        screen.blit(text, text.get_rect(center=(child_x, child_y))) #shows text in screen
     
     if node.right: #right child, number is higher than the root.
         child_x = x + h_spacing
@@ -28,7 +27,6 @@ def draw_bst(screen, node, x, y, font, h_spacing=120, v_spacing=300):
         pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 50) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         draw_bst(screen, node.right, child_x, child_y, font, h_spacing / 1.5, v_spacing)
-        screen.blit(text, text.get_rect(center=(child_x, child_y))) #shows text in screen
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
