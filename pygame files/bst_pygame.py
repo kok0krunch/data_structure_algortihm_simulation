@@ -7,24 +7,24 @@ bst_path = os.path.abspath(os.path.join(current_dir, "..", "core_programs", "cor
 sys.path.append(bst_path)
 from binary_search_tree import BinarySearchTree
 
-def draw_bst(screen, node, x, y, font, h_spacing=120, v_spacing=300):
+def draw_bst(screen, node, x, y, font, h_spacing=200, v_spacing=150):
     if node is None:
         return
-    pygame.draw.circle(screen, (0, 120, 255), (x, y), 50) # draw circle for node
+    pygame.draw.circle(screen, (0, 120, 255), (x, y), 30) # draw circle for node
     text = font.render(str(node.number), True, (255, 255, 255)) #determines characteristic of text
     screen.blit(text, text.get_rect(center=(x, y))) #shows text in screen
 
     if node.left: #left child, number is lower/ equal to root.
         child_x = x - h_spacing
         child_y = y + v_spacing
-        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 50) # draw circle for node
+        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         draw_bst(screen, node.left, child_x, child_y, font, h_spacing / 1.5, v_spacing)
     
     if node.right: #right child, number is higher than the root.
         child_x = x + h_spacing
         child_y = y + v_spacing
-        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 50) # draw circle for node
+        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
         draw_bst(screen, node.right, child_x, child_y, font, h_spacing / 1.5, v_spacing)
 
