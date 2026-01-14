@@ -41,6 +41,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     input_box_rect = input_box_img.get_rect()
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
     tree_offset_x = 0
+    tree_offset_y = 0
     
     
     running = True
@@ -60,8 +61,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
                 elif event.key == pygame.K_RIGHT:
                     tree_offset_x -= 50  # move tree left
+                
+                elif event.key == pygame.K_UP:
+                    tree_offset_y += 50  # move tree up
 
-                if event.key == pygame.K_RETURN:  # Enter key
+                elif event.key == pygame.K_DOWN:
+                    tree_offset_y -= 50  # move tree down
+
+                elif event.key == pygame.K_RETURN:  # Enter key
                     if user_input != "":
                         number = int(user_input)
                         bst.insert(number)  # insert into BST
@@ -74,7 +81,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root:
-            draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 80, font)
+            draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 80+tree_offset_y, font)
 
         screen.blit(input_box_img, input_box_rect)
         input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
