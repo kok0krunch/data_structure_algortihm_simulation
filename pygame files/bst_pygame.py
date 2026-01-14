@@ -7,7 +7,7 @@ bst_path = os.path.abspath(os.path.join(current_dir, "..", "core_programs", "cor
 sys.path.append(bst_path)
 from binary_search_tree import BinarySearchTree
 
-def draw_bst(screen, node, x, y, font, h_spacing=200, v_spacing=150):
+def draw_bst(screen, node, x, y, font, h_spacing=300, v_spacing=100):
     if node is None:
         return
     pygame.draw.circle(screen, (0, 120, 255), (x, y), 30) # draw circle for node
@@ -17,16 +17,16 @@ def draw_bst(screen, node, x, y, font, h_spacing=200, v_spacing=150):
     if node.left: #left child, number is lower/ equal to root.
         child_x = x - h_spacing
         child_y = y + v_spacing
-        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
-        draw_bst(screen, node.left, child_x, child_y, font, h_spacing / 1.5, v_spacing)
+        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
+        draw_bst(screen, node.left, child_x, child_y, font, h_spacing / 2, v_spacing)
     
     if node.right: #right child, number is higher than the root.
         child_x = x + h_spacing
         child_y = y + v_spacing
-        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
         pygame.draw.line(screen, (0, 0, 0), (x, y), (child_x, child_y), 2)
-        draw_bst(screen, node.right, child_x, child_y, font, h_spacing / 1.5, v_spacing)
+        pygame.draw.circle(screen, (0, 120, 255), (child_x, child_y), 30) # draw circle for node
+        draw_bst(screen, node.right, child_x, child_y, font, h_spacing / 2, v_spacing)
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     """Binary Search Tree menu function"""
@@ -63,7 +63,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
         
         if bst.root:
-            draw_bst(screen, bst.root, screen.get_width()//2, 180, font)
+            draw_bst(screen, bst.root, screen.get_width()//2, 80, font)
 
         screen.blit(input_box_img, input_box_rect)
         input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
