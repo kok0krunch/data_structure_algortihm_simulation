@@ -49,10 +49,10 @@ class BinarySearchTree:
                 return node.left
             elif node.left is None and node.right is None: #for deletion of leaf nodes
                 return None  # the node is removed
-        
-            new_node = self._min_value_node(node.right) # For nodes with two child nodes
-            node.number = new_node.number #Changes parent node with the right child node
-            node.right = self._delete(node.right, new_node.number)
+            else:
+                new_node = self._min_value_node(node.right) # For nodes with two child nodes
+                node.number = new_node.number #Changes parent node with the right child node
+                node.right = self._delete(node.right, new_node.number)
         
         return node
 
