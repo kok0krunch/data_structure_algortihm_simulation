@@ -74,6 +74,7 @@ class BinarySearchTree:
 
 #definitions
 def input_number():
+    user_action=input("Binary Search Tree\nTo start type:\n 'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
     while True:
         if user_action.lower()=="f": #programs prints tree when user types done
             print("You have typed 'Done'. Creating tree...")
