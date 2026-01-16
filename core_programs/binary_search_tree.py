@@ -50,13 +50,13 @@ class BinarySearchTree:
             elif node.left is None and node.right is None: #for deletion of leaf nodes
                 return None  # the node is removed
         
-            new_node = self._min_value_node(node.right) # Formats 
-            node.number = new_node.number
+            new_node = self._min_value_node(node.right) # For nodes with two child nodes
+            node.number = new_node.number #Changes parent node with the right child node
             node.right = self._delete(node.right, new_node.number)
         
         return node
 
-    def _min_value_node(self, node):
+    def _min_value_node(self, node): 
         current = node
         while current.left is not None:
             current = current.left
