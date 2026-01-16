@@ -76,25 +76,28 @@ class BinarySearchTree:
 def input_number():
     user_action=input("'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
     while True:
-        if user_action.lower()=="f": #programs prints tree when user types done
-            print("You have typed 'Done'. Creating tree...")
-            binary_search_tree.print_tree()
-            break #stops loop
-        elif user_action.lower()=="i":
-            user_input=input("Enter number to insert:")
-            inputted=int(user_input)
-            binary_search_tree.insert(inputted)
-            binary_search_tree.print_tree()
-            input_number()
-        elif user_action.lower()=="d":
-            user_input=input("Enter number to remove:")
-            inputted=int(user_input)
-            binary_search_tree.delete(inputted)
-            binary_search_tree.print_tree()
-            input_number
-            
-        else:
-            print("Invalid input. You have entered any of the possible actions.") # If user did not type a number or did not type done, program continues to ask for input.
+        try:
+            if user_action.lower()=="f": #programs prints tree when user types done
+                print("You have typed 'Done'. Creating tree...")
+                binary_search_tree.print_tree()
+                break #stops loop
+            elif user_action.lower()=="i":
+                user_input=input("Enter number to insert:")
+                inputted=int(user_input)
+                binary_search_tree.insert(inputted)
+                binary_search_tree.print_tree()
+                input_number()
+            elif user_action.lower()=="d":
+                user_input=input("Enter number to remove:")
+                inputted=int(user_input)
+                binary_search_tree.delete(inputted)
+                binary_search_tree.print_tree()
+                input_number()
+            else:
+                print("Invalid input. You have not entered any of the possible actions.") # If user did not type a number or did not type done, program continues to ask for input.
+                input_number()
+        except:
+            print("Invalid input. You have not entered an integer.") # If user did not type a number or did not type done, program continues to ask for input.
             input_number()
 
 # main program
