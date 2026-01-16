@@ -39,9 +39,9 @@ class BinarySearchTree:
             input_number()
             return node
         
-        if number<int(node.left):# traverse tree to find inputted number, no delete (left=smaller/same)
+        if number<node.number:# traverse tree to find inputted number, no delete (left=smaller/same)
             node.left=self.deletion_branching(node.left,number)
-        elif number>int(node.right):# traverse tree to find inputted number, no delete (right=higher)
+        elif number>node.number:# traverse tree to find inputted number, no delete (right=higher)
             node.right=self.deletion_branching(node.right,number)
         else: # Value to be deleted is found
             if node.left is None:   # If there no left child parents node is replaced by right child
