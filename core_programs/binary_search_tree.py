@@ -74,7 +74,6 @@ class BinarySearchTree:
 
 #definitions
 def input_number():
-    user_action=input("Binary Search Tree\nTo start type:\n 'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
     while True:
         if user_action.lower()=="f": #programs prints tree when user types done
             print("You have typed 'Done'. Creating tree...")
@@ -85,11 +84,13 @@ def input_number():
             inputted=int(user_input)
             binary_search_tree.insert(inputted)
             binary_search_tree.print_tree()
+            user_action=input("'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
         elif user_action.lower()=="d":
             user_input=input("Enter number to remove:")
             inputted=int(user_input)
             binary_search_tree.delete(inputted)
             binary_search_tree.print_tree()
+            user_action=input("'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
             
         else:
             print("Invalid input. You have entered any of the possible actions.") # If user did not type a number or did not type done, program continues to ask for input.
@@ -99,7 +100,7 @@ def input_number():
 inputted_number=0
 max_input=31
 binary_search_tree=BinarySearchTree()
-user_action=input("Binary Search Tree\nTo start type:\n 'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
+user_action=input("Binary Search Tree\nTo start type:\n'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
 while inputted_number<max_input:# Enable user to input until maximum input is reached(31 inputs)(Use while?)
     if not input_number():
         break
