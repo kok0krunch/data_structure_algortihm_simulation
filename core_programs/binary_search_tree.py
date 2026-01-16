@@ -20,14 +20,14 @@ class BinarySearchTree:
     def insertion_branching(self,current,number):
         if number<=current.number: # smaller/equal = left
             if current.left is None:
-                current.left=Node(number) # Traverse the tree until it reaches an empty node
+                current.left=Node(number) # Insert in binary tree
             else:
-                self.insertion_branching(current.left,number)  # Insert in binary tree
+                self.insertion_branching(current.left,number) # Traverse the tree until it reaches an empty node
         else: # bigger = right
             if current.right is None:
-                current.right=Node(number) # Traverse the tree until it reaches an empty node
+                current.right=Node(number)  # Insert in binary tree
             else:
-                self.insertion_branching(current.right,number) # Insert in binary tree
+                self.insertion_branching(current.right,number) # Traverse the tree until it reaches an empty node
     
     def delete(self, number):
         self.root=self.deletion_branching(self.root, number)
@@ -38,8 +38,11 @@ class BinarySearchTree:
             input_number()
             return node
         
-        # traverse tree to find inputted number (left=smaller/same, right=higher)
-        # If node value != number return node (no delete)
+        if number<node.left:# traverse tree to find inputted number, no delete (left=smaller/same)
+            node.left=self.deletion_branching(node.left,number)
+        elif number>node.right:# traverse tree to find inputted number, no delete (right=higher)
+            node.right=self.deletion_branching(node.right,number)
+            
         # Elif tree has no value equal to node, return Node Value
         # Else, delete value
 
