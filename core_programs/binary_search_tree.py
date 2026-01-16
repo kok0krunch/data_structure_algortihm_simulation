@@ -15,19 +15,25 @@ class BinarySearchTree:
         if self.root==None: # First number as root
             self.root=Node(number)
         else: # Determine if number is bigger or smaller
-            self.branching(self.root,number)
+            self.insertion_branching(self.root,number)
 
-    def branching(self,current,number):
+    def insertion_branching(self,current,number):
         if number<=current.number: # smaller/equal = left
             if current.left is None:
                 current.left=Node(number) # Traverse the tree until it reaches an empty node
             else:
-                self.branching(current.left,number)  # Insert in binary tree
+                self.insertion_branching(current.left,number)  # Insert in binary tree
         else: # bigger = right
             if current.right is None:
                 current.right=Node(number) # Traverse the tree until it reaches an empty node
             else:
-                self.branching(current.right,number) # Insert in binary tree
+                self.insertion_branching(current.right,number) # Insert in binary tree
+    
+    def delete(self, number):
+        self.root=self.deletion_branching(self.root, number)
+        
+    def deletion_branching(self):
+        pass
 
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
