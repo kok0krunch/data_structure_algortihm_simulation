@@ -85,11 +85,13 @@ def input_number():
             inputted=int(user_input)
             binary_search_tree.insert(inputted)
             binary_search_tree.print_tree()
+            input_number()
         elif user_action.lower()=="d":
             user_input=input("Enter number to remove:")
             inputted=int(user_input)
             binary_search_tree.delete(inputted)
             binary_search_tree.print_tree()
+            input_number
             
         else:
             print("Invalid input. You have entered any of the possible actions.") # If user did not type a number or did not type done, program continues to ask for input.
