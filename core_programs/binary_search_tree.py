@@ -42,9 +42,13 @@ class BinarySearchTree:
             node.left=self.deletion_branching(node.left,number)
         elif number>node.right:# traverse tree to find inputted number, no delete (right=higher)
             node.right=self.deletion_branching(node.right,number)
-            
-        # Elif tree has no value equal to node, return Node Value
-        # Else, delete value
+        else: # Value to be deleted is found
+            if node.left is None:   # If there no left child parents node is replaced by right child
+                return node.right
+            elif node.right is None:  # If there no right child parents node is replaced by left child
+                return node.left
+            elif node.left is None and node.right is None: #for deletion of leaf nodes
+                return None  # the node is removed
 
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
