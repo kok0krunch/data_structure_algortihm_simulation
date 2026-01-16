@@ -49,6 +49,18 @@ class BinarySearchTree:
                 return node.left
             elif node.left is None and node.right is None: #for deletion of leaf nodes
                 return None  # the node is removed
+        
+            new_node = self._min_value_node(node.right) # Formats 
+            node.number = new_node.number
+            node.right = self._delete(node.right, new_node.number)
+        
+        return node
+
+    def _min_value_node(self, node):
+        current = node
+        while current.left is not None:
+            current = current.left
+        return current
 
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
