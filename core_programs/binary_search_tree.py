@@ -33,7 +33,11 @@ class BinarySearchTree:
         self.root=self.deletion_branching(self.root, number)
         
     def deletion_branching(self, node, number):
-        pass
+        if node is None: # line of code to avoid exception when no node value is found equal to inputted number
+            print(f"You do not have a {number} in your binary search tree.")
+            input_number()
+            return node
+        
         # traverse tree to find inputted number (left=smaller/same, right=higher)
         # If node value != number return node (no delete)
         # Elif tree has no value equal to node, return Node Value
