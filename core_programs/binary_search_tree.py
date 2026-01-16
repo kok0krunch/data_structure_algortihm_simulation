@@ -37,8 +37,11 @@ class BinarySearchTree:
             print(f"You do not have a {number} in your binary search tree.")
             input_number()
             return node
-        
-        if number<node.number:# traverse tree to find inputted number, no delete (left=smaller/same)
+        if number==self.root:
+            new_root = self._min_value_node(node.right) # For nodes with two child nodes
+            self.root = new_root.number #Changes parent node with the right child node
+            self.root = self._delete(self.root, new_root.number)
+        elif number<node.number:# traverse tree to find inputted number, no delete (left=smaller/same)
             node.left=self.deletion_branching(node.left,number)
         elif number>node.number:# traverse tree to find inputted number, no delete (right=higher)
             node.right=self.deletion_branching(node.right,number)
