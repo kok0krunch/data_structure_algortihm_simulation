@@ -31,7 +31,6 @@ class BinarySearchTree:
     
     def delete(self, number):
         self.root=self.deletion_branching(self.root, number)
-        input_number()
         
     def deletion_branching(self, node, number):
         if node is None: # line of code to avoid exception when no node value is found equal to inputted number
