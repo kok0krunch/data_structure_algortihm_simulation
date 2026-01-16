@@ -100,6 +100,7 @@ def input_number():
                 input_number()
         except:
             print("Invalid input. You have not entered an integer.") # If user did not type a number or did not type done, program continues to ask for input.
+            binary_search_tree.print_tree()
             input_number()
 
 # main program
