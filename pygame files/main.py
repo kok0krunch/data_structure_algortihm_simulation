@@ -79,7 +79,7 @@ start_btn = Button(200, 550, start_img, 0.7)
 exit_btn = Button(720, 550, exit_img, 0.7)
 
 # start options buttons
-back_btn = Button(0, 0, back_img, 0.4)
+back_btn = Button(0, 0, back_img, 0.3)
 stacks_btn = Button(0, 450, stacks_img, 0.7)
 queue_btn = Button(470, 450, queue_img, 0.7)
 bt_btn = Button(945, 450, bt_img, 0.7)
