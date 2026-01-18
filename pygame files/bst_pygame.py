@@ -10,7 +10,7 @@ from binary_search_tree import BinarySearchTree
 def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=110):
     if node is None:
         return
-    node_img = pygame.image.load("images/bst_node.png").convert_alpha()
+    node_img = pygame.image.load("images/bst_images/bst_node.png").convert_alpha()
     node_img = pygame.transform.scale(node_img, (125, 125))
     node_rect = node_img.get_rect(center=(x, y+12))
     radius=31.5
@@ -40,7 +40,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     bst = BinarySearchTree()
     font = pygame.font.SysFont(None, 26)
     input_font = pygame.font.SysFont(None, 40)
-    input_box_img = pygame.image.load("images/bst_input_box.png").convert_alpha()
+    input_box_img = pygame.image.load("images/bst_images/bst_input_box.png").convert_alpha()
     input_box_img = pygame.transform.scale(input_box_img, (300, 300)) 
     input_box_rect = input_box_img.get_rect()
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
