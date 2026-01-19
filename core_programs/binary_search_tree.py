@@ -80,8 +80,8 @@ class BinarySearchTree:
             if number==self.root:
                 print(f"{number} found. It is the root.")
             else:
-                print(f"{number} is found. It is the node colored green.")
-                
+                print(f"{number} is found.")
+
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
 
@@ -93,7 +93,7 @@ class BinarySearchTree:
 
 #definitions
 def input_number():
-    user_action=input("'I': Insert value\n'D':Delete value\n'F':Finish input\nYour choice:")
+    user_action=input("'I': Insert value\n'D':Delete value\n'S':Seacrh\n'F':Finish input\nYour choice:")
     while True:
         try:
             if user_action.lower()=="f": #programs prints tree when user types done
@@ -112,6 +112,11 @@ def input_number():
                 binary_search_tree.delete(inputted)
                 binary_search_tree.print_tree()
                 input_number()
+            elif user_action.lower()=="s":
+                user_input=input("Enter number you want to search:")
+                inputted=int(user_input)
+                binary_search_tree.search(inputted)
+                binary_search_tree.print_tree()
             else:
                 print("Invalid input. You have not entered any of the possible actions.") # If user did not type a number or did not type done, program continues to ask for input.
                 input_number()
