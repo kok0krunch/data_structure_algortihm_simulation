@@ -56,7 +56,6 @@ class BinarySearchTree:
                 new_node = self._min_value_node(node.right) # For nodes with two child nodes
                 node.number = new_node.number #Changes parent node with the right child node
                 node.right = self._delete(node.right, new_node.number)
-        
         return node
 
     def _min_value_node(self, node): 
@@ -65,6 +64,24 @@ class BinarySearchTree:
             current = current.left
         return current
 
+    def search(self,number):
+        self.root=self.search_branching(number)
+
+    def search_branching(self,node,number):
+        if node is None: # line of code to avoid exception when no node value is found equal to inputted number
+            print(f"You do not have a {number} in your binary search tree.")
+            input_number()
+            return node
+        if number<node.number:# traverse tree to find inputted number
+            node.left=self.search_branching(node.left,number)
+        elif number>node.number:# traverse tree to find inputted number
+            node.right=self.search_branching(node.right,number)
+        else: # Searched is found
+            if number==self.root:
+                print(f"{number} found. It is the root.")
+            else:
+                print(f"{number} is found. It is the node colored green.")
+                
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
 
