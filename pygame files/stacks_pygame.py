@@ -74,7 +74,7 @@ class ParkingGarageVisualizer:
         garage_x = 150
         garage_y = 145
         garage_width = 350
-        garage_height = 630
+        garage_height = 550
         
         # Draw main garage frame
         pygame.draw.rect(screen, (240, 240, 240), (garage_x, garage_y, garage_width, garage_height))
@@ -118,7 +118,7 @@ class ParkingGarageVisualizer:
         temp_x = 520
         temp_y = 145
         temp_width = 240
-        temp_height = 630
+        temp_height = 550
         
         # Draw temp stack frame with different color during animation
         if self.animation_active:
@@ -236,7 +236,7 @@ class ParkingGarageVisualizer:
         table_x = 780
         table_y = 340
         table_width = 410
-        table_height = 435
+        table_height = 355
 # CAR LOG TABLE       
         # Panel background
         pygame.draw.rect(screen, (245, 245, 245), (table_x, table_y, table_width, table_height), 0)
@@ -268,7 +268,7 @@ class ParkingGarageVisualizer:
         # Table rows
         row_y = header_y + 20
         row_height = 20
-        max_rows = 20
+        max_rows = 15
         
         for i, (plate, [arrivals, departures]) in enumerate(self.car_log.items()):
             if i >= max_rows:
@@ -496,7 +496,7 @@ def stacks_menu(screen, clock, globalbg_img, back_btn):
         # Draw main title at the top
         title_font = pygame.font.SysFont("couriernew", 60, bold=True)
         main_title = title_font.render("The Purr-king Garage (Stacks)", True, (50, 50, 50))
-        screen.blit(main_title, (visualizer.screen_width // 2 - main_title.get_width() // 2, 30))
+        screen.blit(main_title, (visualizer.screen_width // 2 - main_title.get_width() // 2, 50))
 
         # Draw parking garage and temporary stack
         visualizer.draw_garage_left(screen)

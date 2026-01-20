@@ -336,9 +336,9 @@ class BinaryTreeVisualizer:
     def draw_controls(self, screen):
         """Draw control panel"""
         panel_x = self.screen_width - 380
-        panel_y = 80
+        panel_y = 100
         panel_width = 360
-        panel_height = 550
+        panel_height = 520
         
         # Panel background
         pygame.draw.rect(screen, self.bg_color, (panel_x, panel_y, panel_width, panel_height))
