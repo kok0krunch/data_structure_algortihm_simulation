@@ -15,21 +15,21 @@ clock = pygame.time.Clock()
 """ load images """
 
 # start elements
-activities_img = pygame.image.load("images/activities_img.png").convert_alpha()
-bst_img = pygame.image.load("images/bst_img.png")
-bt_img = pygame.image.load("images/bt_img.png")
-queue_img = pygame.image.load("images/queue_img.png")
-recursion_img = pygame.image.load("images/recursion_img.png")
-stacks_img = pygame.image.load("images/stacks_img.png")
-back_img = pygame.image.load("images/back_img.png")
+activities_img = pygame.image.load("images/menu_images/activities_img.png").convert_alpha()
+bst_img = pygame.image.load("images/menu_images/bst_img.png")
+bt_img = pygame.image.load("images/menu_images/bt_img.png")
+queue_img = pygame.image.load("images/menu_images/queue_img.png")
+recursion_img = pygame.image.load("images/menu_images/recursion_img.png")
+stacks_img = pygame.image.load("images/menu_images/stacks_img.png")
+back_img = pygame.image.load("images/menu_images/back_img.png")
 
 # main menu elements
-start_img = pygame.image.load("images/start_img.png")
-exit_img = pygame.image.load("images/exit_img.png")
-gametitle_img = pygame.image.load("images/gametitle_img.png").convert_alpha()
+start_img = pygame.image.load("images/menu_images/start_img.png")
+exit_img = pygame.image.load("images/menu_images/exit_img.png")
+gametitle_img = pygame.image.load("images/menu_images/gametitle_img.png").convert_alpha()
 
 # game background image
-globalbg_img = pygame.image.load("images/globalbg_img.jpg")
+globalbg_img = pygame.image.load("images/menu_images/globalbg_img.jpg")
 globalbg_img= pygame.transform.scale(globalbg_img,(1366, 768))  # scale image to fit the game window
 
 """ class for button functionality """
@@ -79,7 +79,7 @@ start_btn = Button(200, 550, start_img, 0.7)
 exit_btn = Button(720, 550, exit_img, 0.7)
 
 # start options buttons
-back_btn = Button(0, 0, back_img, 0.4)
+back_btn = Button(0, 0, back_img, 0.3)
 stacks_btn = Button(0, 450, stacks_img, 0.7)
 queue_btn = Button(470, 450, queue_img, 0.7)
 bt_btn = Button(945, 450, bt_img, 0.7)
