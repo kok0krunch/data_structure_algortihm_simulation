@@ -158,18 +158,18 @@ class BinaryTreeVisualizer:
                 highlight_surf = pygame.Surface((100, 100))
                 highlight_surf.fill((255, 255, 0))
                 highlight_surf.set_alpha(pulse)
-                screen.blit(highlight_surf, (x - 50, y - 50))
+                screen.blit(highlight_surf, (x - 40, y - 40))
             screen.blit(self.node_img, node_rect)
         else:
             # Fallback to circle
             if highlighted:
                 # Pulsing highlight effect
                 pulse = abs(math.sin(pygame.time.get_ticks() * 0.01)) * 30 + 30
-                pygame.draw.circle(screen, (255, 255, 0), (x, y), 45 + pulse//2)
+                pygame.draw.circle(screen, (255, 255, 0), (x, y), 35 + pulse//2)
             
             color = (100, 255, 100) if highlighted else self.node_color
-            pygame.draw.circle(screen, color, (x, y), 45)
-            pygame.draw.circle(screen, (0, 0, 0), (x, y), 45, 3)
+            pygame.draw.circle(screen, color, (x, y), 35)
+            pygame.draw.circle(screen, (0, 0, 0), (x, y), 35, 3)
         
         # Draw value text with different color when highlighted
         text_color = (255, 0, 0) if highlighted else (0, 0, 0)
@@ -188,13 +188,13 @@ class BinaryTreeVisualizer:
             return positions
         
         # Tree drawing area - adjusted for larger trees
-        tree_area_x = 50
+        tree_area_x = 0
         tree_area_y = 120
-        tree_area_width = self.screen_width - 400
+        tree_area_width = self.screen_width - 350
         tree_area_height = 500
         
         # Calculate minimum spacing needed for nodes (considering node size)
-        min_node_spacing = 100  # Minimum distance between nodes
+        min_node_spacing = 65  # Minimum distance between nodes
         
         # Calculate positions using a different approach for better spacing
         def get_tree_width(level):
@@ -248,7 +248,7 @@ class BinaryTreeVisualizer:
         # Draw tree background panel first
         tree_panel_x = 30
         tree_panel_y = 100
-        tree_panel_width = self.screen_width - 430
+        tree_panel_width = self.screen_width - 410
         tree_panel_height = 520
         
         # White background with black border
@@ -298,7 +298,7 @@ class BinaryTreeVisualizer:
             
             node_pos = positions[level][node]
             # Only draw if node is within visible bounds
-            if (50 <= node_pos[0] <= self.screen_width - 450 and 
+            if (35 <= node_pos[0] <= self.screen_width - 380 and 
                 80 <= node_pos[1] <= self.screen_height - 50):
                 
                 # Check if this node should be highlighted
@@ -335,7 +335,7 @@ class BinaryTreeVisualizer:
 
     def draw_controls(self, screen):
         """Draw control panel"""
-        panel_x = self.screen_width - 380
+        panel_x = self.screen_width - 370
         panel_y = 100
         panel_width = 360
         panel_height = 520
