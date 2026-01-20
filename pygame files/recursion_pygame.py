@@ -105,7 +105,7 @@ def main():
     user_input = ""
 
     while stage < 3:
-        screen.fill(white)
+        screen.blit(menu_bg, (0, 0))
 
         if stage == 0:
             text = font.render("Enter number of disks (1-7): " + user_input, True, black)
@@ -113,9 +113,6 @@ def main():
             text = font.render("Enter origin tower (1,2,3): " + user_input, True, black)
         else:
             text = font.render("Enter destination tower (1,2,3): " + user_input, True, black)
-
-        draw_pegs(screen)
-        draw_disks(screen, towers)
 
         screen.blit(text, (50, 200))
         pygame.display.flip()
@@ -165,7 +162,7 @@ def main():
     clock = pygame.time.Clock()
 
     while True:
-        screen.fill((250, 250, 250))
+        screen.blit(menu_bg, (0, 0))
         draw_pegs(screen)
         draw_disks(screen, towers)
 
