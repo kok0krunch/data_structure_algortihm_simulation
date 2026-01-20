@@ -37,6 +37,14 @@ class ParkingGarageVisualizer:
         self.message = ""
         self.message_timer = 0
         
+        # Animation state for temp stack operations
+        self.animation_active = False
+        self.animation_step = 0  # 0: idle, 1: moving to temp, 2: found target, 3: restoring from temp
+        self.animation_timer = 0
+        self.animation_target_plate = ""
+        self.animation_temp_cars = []  # Cars to move to temp
+        self.cars_to_restore = []  # Cars to restore from temp
+        
         # Fonts - Using bold system font with larger sizes
         self.font = pygame.font.SysFont("couriernew", 44)
         self.small_font = pygame.font.SysFont("couriernew", 28)
@@ -62,10 +70,10 @@ class ParkingGarageVisualizer:
     
     def draw_garage_left(self, screen):
         """Draw main parking lot stack"""
-        # Main Stack (Left side) - Centered
-        garage_x = 210
+        # Main Stack (Left side) - Narrower to make room for temp stack
+        garage_x = 150
         garage_y = 145
-        garage_width = 550
+        garage_width = 350
         garage_height = 630
         
         # Draw main garage frame
@@ -73,11 +81,11 @@ class ParkingGarageVisualizer:
         pygame.draw.rect(screen, (100, 100, 100), (garage_x, garage_y, garage_width, garage_height), 3)
 # PURRKING LOT DETAILS       
         # Title (Centered)
-        garage_title = pygame.font.SysFont("couriernew", 28, bold=True).render("PURR-KING LOT", True, (50, 50, 50))
+        garage_title = pygame.font.SysFont("couriernew", 24, bold=True).render("MAIN STACK", True, (50, 50, 50))
         screen.blit(garage_title, (garage_x + garage_width // 2 - garage_title.get_width() // 2, garage_y + 8))
         
         # Capacity info
-        capacity_text = pygame.font.SysFont("couriernew", 18).render(f"Capacity: {self.parking_stack.size()}/{self.max_capacity}", 
+        capacity_text = pygame.font.SysFont("couriernew", 16).render(f"Cars: {self.parking_stack.size()}/{self.max_capacity}", 
                                             True, (50, 50, 50))
         screen.blit(capacity_text, (garage_x + 15, garage_y + 32))
         
@@ -96,13 +104,67 @@ class ParkingGarageVisualizer:
                     
                     # Top label (only for newest car)
                     if i == len(self.parking_stack.items) - 1:
-                        top_label = pygame.font.SysFont("couriernew", 18).render("(TOP)", True, (255, 0, 0))
+                        top_label = pygame.font.SysFont("couriernew", 14).render("(TOP)", True, (255, 0, 0))
                         screen.blit(top_label, (garage_x + garage_width - 55, slot_y + 12))
                     
                     slot_y += slot_height
         else:
-            empty_text = pygame.font.SysFont("couriernew", 24, bold=True).render("No cars parked", True, (150, 150, 150))
+            empty_text = pygame.font.SysFont("couriernew", 20, bold=True).render("No cars", True, (150, 150, 150))
             screen.blit(empty_text, (garage_x + garage_width // 2 - empty_text.get_width() // 2, garage_y + 300))
+    
+    def draw_temp_stack(self, screen):
+        """Draw temporary stack beside the main stack"""
+        # Temporary Stack (Middle) - Next to main stack
+        temp_x = 520
+        temp_y = 145
+        temp_width = 240
+        temp_height = 630
+        
+        # Draw temp stack frame with different color during animation
+        if self.animation_active:
+            pygame.draw.rect(screen, (255, 240, 200), (temp_x, temp_y, temp_width, temp_height))
+            pygame.draw.rect(screen, (255, 140, 0), (temp_x, temp_y, temp_width, temp_height), 3)
+        else:
+            pygame.draw.rect(screen, (255, 250, 240), (temp_x, temp_y, temp_width, temp_height))
+            pygame.draw.rect(screen, (180, 140, 100), (temp_x, temp_y, temp_width, temp_height), 3)
+        
+        # Title
+        title_color = (255, 140, 0) if self.animation_active else (139, 69, 19)
+        temp_title = pygame.font.SysFont("couriernew", 20, bold=True).render("TEMP STACK", True, title_color)
+        screen.blit(temp_title, (temp_x + temp_width // 2 - temp_title.get_width() // 2, temp_y + 8))
+        
+        # Status info with animation details
+        if self.animation_active:
+            status_text = pygame.font.SysFont("couriernew", 12).render(f"ACTIVE - Step {self.animation_step}", 
+                                             True, title_color)
+        else:
+            status_text = pygame.font.SysFont("couriernew", 14).render(f"Holding: {self.temp_stack.size()}", 
+                                             True, title_color)
+        screen.blit(status_text, (temp_x + 15, temp_y + 32))
+        
+        # Draw cars in temp stack (newest at top, like main stack)
+        slot_y = temp_y + 58
+        slot_height = 45
+        car_x = temp_x + (temp_width - 100) // 2
+        
+        if not self.temp_stack.is_empty():
+            # Display in reverse order (newest first, at top)
+            for i in range(len(self.temp_stack.items) - 1, -1, -1):
+                plate = self.temp_stack.items[i]
+                
+                if slot_y + slot_height < temp_y + temp_height - 15:
+                    # Draw car with slightly different styling for temp stack
+                    self.draw_car_with_label(screen, car_x, slot_y + 3, plate)
+                    
+                    # Add temp indicator for top car
+                    if i == len(self.temp_stack.items) - 1:
+                        temp_label = pygame.font.SysFont("couriernew", 12, bold=True).render("(TEMP)", True, (255, 165, 0))
+                        screen.blit(temp_label, (temp_x + temp_width - 65, slot_y + 15))
+                    
+                    slot_y += slot_height
+        else:
+            empty_text = pygame.font.SysFont("couriernew", 16, bold=True).render("Empty", True, (150, 150, 150))
+            screen.blit(empty_text, (temp_x + temp_width // 2 - empty_text.get_width() // 2, temp_y + 300))
     
     def draw_controls_right(self, screen):
         """Draw input controls, buttons on the right side"""
@@ -256,7 +318,7 @@ class ParkingGarageVisualizer:
         self.input_plate = ""
     
     def depart(self, plate):
-        """Remove a car from the garage"""
+        """Remove a car using Stack (LIFO) logic with animated temp stack processing"""
         if not plate:
             self.message = "Please enter a license plate"
             self.message_timer = 60
@@ -266,53 +328,114 @@ class ParkingGarageVisualizer:
             self.message = "Garage is empty!"
             self.message_timer = 80
             return
+            
+        if self.animation_active:
+            self.message = "Animation in progress, please wait..."
+            self.message_timer = 60
+            return
         
         plate = plate.upper()
-        found = False
-        temp_cars = []
         
-        # Search for the car and move cars above it temporarily
-        while not self.parking_stack.is_empty():
-            current_car = self.parking_stack.pop()
-            if current_car == plate:
-                # Car found and removed
-                if plate not in self.car_log:
-                    self.car_log[plate] = [0, 0]
-                self.car_log[plate][1] += 1
-                
-                # Remove from car log if depart count equals arrival count
-                if self.car_log[plate][1] >= self.car_log[plate][0]:
-                    del self.car_log[plate]
-                
-                self.message = f"Car {plate} departed!"
-                found = True
-                
-                # Log temporary cars as departed, then arrived again
-                for car in temp_cars:
-                    if car not in self.car_log:
-                        self.car_log[car] = [0, 0]
-                    self.car_log[car][1] += 1  # Log as departed
-                
-                # Put remaining cars back and log as arrived again
-                for car in reversed(temp_cars):
-                    self.parking_stack.push(car)
-                    if car not in self.car_log:
-                        self.car_log[car] = [0, 0]
-                    self.car_log[car][0] += 1  # Log as arrived again
-                
-                break
-            else:
-                # Store cars above the target
-                temp_cars.append(current_car)
-        
-        if not found:
-            # Car not found, restore all cars
-            for car in reversed(temp_cars):
-                self.parking_stack.push(car)
+        # Check if car exists in stack
+        if plate not in self.parking_stack.items:
             self.message = f"Car {plate} not found!"
+            self.message_timer = 80
+            self.input_plate = ""
+            return
         
-        self.message_timer = 80
+        # Start animation sequence
+        self.animation_active = True
+        self.animation_step = 1
+        self.animation_timer = 0
+        self.animation_target_plate = plate
+        self.temp_stack = Stack()  # Clear temp stack
+        
+        # Prepare list of cars that need to be moved to temp (cars above target)
+        target_index = self.parking_stack.items.index(plate)
+        self.animation_temp_cars = self.parking_stack.items[target_index + 1:].copy()
+        self.animation_temp_cars.reverse()  # Reverse for LIFO order
+        self.cars_to_restore = []
+        
+        self.message = f"Starting removal of {plate}..."
+        self.message_timer = 120
         self.input_plate = ""
+    
+    def update_animation(self):
+        """Update the animation state for temp stack operations"""
+        if not self.animation_active:
+            return
+            
+        self.animation_timer += 1
+        
+        # Step 1: Move cars to temp stack (one car every 30 frames)
+        if self.animation_step == 1:
+            if self.animation_timer >= 30:  # Move one car every 30 frames (0.5 seconds)
+                if self.animation_temp_cars:
+                    # Move one car from main to temp
+                    car_to_move = self.animation_temp_cars.pop(0)
+                    # Remove from top of main stack
+                    if not self.parking_stack.is_empty() and self.parking_stack.items[-1] == car_to_move:
+                        moved_car = self.parking_stack.pop()
+                        self.temp_stack.push(moved_car)
+                        self.cars_to_restore.append(moved_car)
+                        
+                        # Update car log: increment departure count for temporary move
+                        if moved_car not in self.car_log:
+                            self.car_log[moved_car] = [0, 0]
+                        self.car_log[moved_car][1] += 1
+                        
+                        self.message = f"Moving {moved_car} to temporary stack..."
+                        self.message_timer = 60
+                    
+                    self.animation_timer = 0
+                else:
+                    # All cars moved to temp, now remove target car
+                    self.animation_step = 2
+                    self.animation_timer = 0
+        
+        # Step 2: Remove target car
+        elif self.animation_step == 2:
+            if self.animation_timer >= 30:
+                if not self.parking_stack.is_empty() and self.parking_stack.items[-1] == self.animation_target_plate:
+                    removed_car = self.parking_stack.pop()
+                    
+                    # Remove car completely from car log (permanent departure)
+                    if removed_car in self.car_log:
+                        del self.car_log[removed_car]
+                    
+                    self.message = f"Car {removed_car} departed permanently!"
+                    self.message_timer = 60
+                    
+                    self.animation_step = 3
+                    self.animation_timer = 0
+        
+        # Step 3: Restore cars from temp stack (one car every 20 frames)
+        elif self.animation_step == 3:
+            if self.animation_timer >= 20:  # Faster restoration
+                if not self.temp_stack.is_empty():
+                    restored_car = self.temp_stack.pop()
+                    self.parking_stack.push(restored_car)
+                    
+                    # Update car log: increment arrival count for restoration
+                    if restored_car not in self.car_log:
+                        self.car_log[restored_car] = [0, 0]
+                    self.car_log[restored_car][0] += 1
+                    
+                    self.message = f"Restoring {restored_car} to main stack..."
+                    self.message_timer = 60
+                    
+                    self.animation_timer = 0
+                else:
+                    # Animation complete
+                    self.animation_active = False
+                    self.animation_step = 0
+                    self.animation_timer = 0
+                    self.animation_target_plate = ""
+                    self.animation_temp_cars = []
+                    self.cars_to_restore = []
+                    
+                    self.message = "Stack operation completed!"
+                    self.message_timer = 60
     
     def handle_event(self, event, arrive_rect=None, depart_rect=None, clear_rect=None, plate_input_rect=None):
         """Handle keyboard and mouse input"""
@@ -343,7 +466,16 @@ class ParkingGarageVisualizer:
                     self.depart(self.input_plate)
             elif clear_rect and clear_rect.collidepoint(event.pos):
                 self.parking_stack = Stack()
+                self.temp_stack = Stack()
                 self.car_log = {}
+                # Reset animation state
+                self.animation_active = False
+                self.animation_step = 0
+                self.animation_timer = 0
+                self.animation_target_plate = ""
+                self.animation_temp_cars = []
+                self.cars_to_restore = []
+                
                 self.message = "Garage cleared!"
                 self.message_timer = 60
                 self.input_plate = ""
@@ -354,18 +486,10 @@ def stacks_menu(screen, clock, globalbg_img, back_btn):
     visualizer = ParkingGarageVisualizer(screen.get_width(), 1000)  # Fixed height to 1000
     
     while running:
-        # poll for events
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                return False
-            
-            # Garage operation screen
-            visualizer.draw_garage_left(screen)
-            arrive_rect, depart_rect, clear_rect, plate_input_rect = visualizer.draw_controls_right(screen)
-            visualizer.draw_history_table(screen)
-            visualizer.handle_event(event, arrive_rect, depart_rect, clear_rect, plate_input_rect)
-
-        # Show background
+        # Update animation
+        visualizer.update_animation()
+        
+        # Show background first
         screen.blit(globalbg_img, (0, 0))
 
 # PURRKING GARAGE VISUALIZER
@@ -374,10 +498,18 @@ def stacks_menu(screen, clock, globalbg_img, back_btn):
         main_title = title_font.render("The Purr-king Garage (Stacks)", True, (50, 50, 50))
         screen.blit(main_title, (visualizer.screen_width // 2 - main_title.get_width() // 2, 30))
 
-        # Draw parking garage
+        # Draw parking garage and temporary stack
         visualizer.draw_garage_left(screen)
+        visualizer.draw_temp_stack(screen)
         arrive_rect, depart_rect, clear_rect, plate_input_rect = visualizer.draw_controls_right(screen)
         visualizer.draw_history_table(screen)
+        
+        # poll for events
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return False
+            
+            visualizer.handle_event(event, arrive_rect, depart_rect, clear_rect, plate_input_rect)
 
         # Draw back button
         if back_btn.draw():
