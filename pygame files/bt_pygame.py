@@ -63,6 +63,31 @@ class BinaryTree:
                 node.right = nodes[right_idx]
         self.root = nodes[0] if nodes else None
 
+    def build_incomplete_tree(self, target_depth: int, low: int = 10, high: int = 99) -> None:
+        """Build an incomplete binary tree up to target_depth with random values.
+        An incomplete tree is filled level by level, but the last level may not be completely filled."""
+        if target_depth < 1 or target_depth > self.max_depth:
+            raise ValueError(f"target_depth must be between 1 and {self.max_depth}")
+
+        # For incomplete trees, we'll generate a random number of nodes
+        # that's between a complete tree and a full tree
+        max_nodes = 2 ** target_depth - 1
+        min_nodes = 2 ** (target_depth - 1)  # At least fill up to previous level
+        
+        # Generate random number of nodes for incomplete tree
+        num_nodes = random.randint(min_nodes, max_nodes)
+        
+        available = high - low + 1
+        if available < num_nodes:
+            values = [random.randint(low, high) for _ in range(num_nodes)]
+        else:
+            values = random.sample(range(low, high + 1), num_nodes)
+        
+        # Build tree by inserting values in level-order (breadth-first)
+        self.root = None
+        for value in values:
+            self.insert(value)
+
     def preorder(self) -> List[int]:
         result: List[int] = []
         nodes: List[Node] = []  # Store node objects for animation
@@ -360,13 +385,22 @@ class BinaryTreeVisualizer:
         button_height = 30
         button_spacing = 12
         
-        # Build Tree button
-        build_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, button_width, button_height)
-        pygame.draw.rect(screen, (100, 200, 100), build_rect)
-        pygame.draw.rect(screen, (50, 150, 50), build_rect, 2)
-        build_text = self.font.render("Build Tree", True, (255, 255, 255))
-        screen.blit(build_text, (build_rect.centerx - build_text.get_width() // 2,
-                                build_rect.centery - build_text.get_height() // 2))
+        # Build Complete Tree button
+        complete_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, 105, button_height)
+        pygame.draw.rect(screen, (100, 200, 100), complete_rect)
+        pygame.draw.rect(screen, (50, 150, 50), complete_rect, 2)
+        complete_text = self.small_font.render("Complete", True, (255, 255, 255))
+        screen.blit(complete_text, (complete_rect.centerx - complete_text.get_width() // 2,
+                                complete_rect.centery - complete_text.get_height() // 2))
+        y_offset += button_height + button_spacing
+        
+        # Build Incomplete Tree button
+        incomplete_build_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, 105, button_height)
+        pygame.draw.rect(screen, (180, 140, 100), incomplete_build_rect)
+        pygame.draw.rect(screen, (130, 90, 50), incomplete_build_rect, 2)
+        incomplete_build_text = self.small_font.render("Incomplete", True, (255, 255, 255))
+        screen.blit(incomplete_build_text, (incomplete_build_rect.centerx - incomplete_build_text.get_width() // 2,
+                                incomplete_build_rect.centery - incomplete_build_text.get_height() // 2))
         y_offset += button_height + button_spacing
         
         # Depth buttons
@@ -431,7 +465,7 @@ class BinaryTreeVisualizer:
             screen.blit(msg, (panel_x + 20, panel_y + panel_height - 50))
             self.message_timer -= 1
         
-        return (build_rect, depth_up_rect, depth_down_rect, clear_rect, 
+        return (complete_rect, incomplete_build_rect, depth_up_rect, depth_down_rect, clear_rect,
                 preorder_rect, inorder_rect, postorder_rect)
     
     def draw_traversal_output(self, screen):
@@ -500,13 +534,29 @@ class BinaryTreeVisualizer:
     def handle_event(self, event, rects):
         """Handle user input events"""
         if event.type == pygame.MOUSEBUTTONDOWN:
-            build_rect, depth_up_rect, depth_down_rect, clear_rect, preorder_rect, inorder_rect, postorder_rect = rects
+            complete_rect, incomplete_build_rect, depth_up_rect, depth_down_rect, clear_rect, preorder_rect, inorder_rect, postorder_rect = rects
             
-            if build_rect.collidepoint(event.pos):
+            if complete_rect.collidepoint(event.pos):
                 try:
                     self.tree = BinaryTree(max_depth=self.max_depth)
                     self.tree.build_full_tree(self.current_depth)
-                    self.message = f"Built tree with depth {self.current_depth}"
+                    self.message = f"Built complete tree with depth {self.current_depth}"
+                    self.message_timer = 120
+                    self.traversal_result = ""
+                    self.traversal_type = ""
+                    # Reset animation
+                    self.animation_active = False
+                    self.animation_nodes = []
+                    self.current_highlight_index = 0
+                except Exception as e:
+                    self.message = f"Error: {str(e)[:30]}..."
+                    self.message_timer = 120
+            
+            elif incomplete_build_rect.collidepoint(event.pos):
+                try:
+                    self.tree = BinaryTree(max_depth=self.max_depth)
+                    self.tree.build_incomplete_tree(self.current_depth)
+                    self.message = f"Built incomplete tree with depth {self.current_depth}"
                     self.message_timer = 120
                     self.traversal_result = ""
                     self.traversal_type = ""
