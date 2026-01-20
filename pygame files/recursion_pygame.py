@@ -7,6 +7,16 @@ pygame.init()
 screen = pygame.display.set_mode((800,400))
 pygame.display.set_caption('Tower of Hanoi')
 clock = pygame.time.Clock()
+
+menu_bg = pygame.image.load("images/background_image_toh.jpg").convert()
+menu_bg = pygame.transform.scale(menu_bg, (900, 500))
+base_width = 60
+width_step = 25
+peg_height = 200
+disk_height = 20
+move_delay = 0.6
+rainbow_colors = [(255, 0, 0), (255, 127, 0), (255, 255, 0), (0, 255, 0), 
+                  (0, 0, 255), (75, 0, 130), (148, 0, 211)]
 max_disks = 7
 peg_y_placement = 120
 peg_x_placement = { 1: 250, 2: 450, 3: 650}
@@ -14,8 +24,8 @@ black = (0, 0, 0)
 blue = (100, 149, 237)
 white = (250, 250, 250)
 move_delay = 0.6
-peg_img = pygame.image.load("images/menu_images/peg_img.png").convert_alpha()
-disk_img = pygame.image.load("images/menu_images/disk_img.png").convert_alpha()
+peg_img = pygame.image.load("images/peg_img.png").convert_alpha()
+disk_img = pygame.image.load("images/disk_img.png").convert_alpha()
 
 class TowerOfHanoi:
     def __init__(self):
@@ -71,28 +81,18 @@ class TowerOfHanoi:
         self.tower_three_to_tower_two(int(user_input) - 1, tower_1, tower_3, tower_2)
 
 def draw_pegs(screen):
-    peg_width = 60
-    peg_height = 280
-    peg_dimensions = pygame.transform.scale(peg_img, peg_width, peg_height)
     for x in peg_x_placement.values():
-        screen.blit(peg_img, (x - peg_img.get_width() // 2, 120))
+        pygame.draw.rect(screen, black, (x -5, 100, 10, 200))
 
 def draw_disks(screen, towers):
-    disk_images = {}
-    base_width = 60
-    width_step = 25
-    disk_height = disk_img.get_height()
-
-    for disk in range(1, max_disks + 1):
-        width = base_width + (disk - 1) * width_step
-        disk_images[disk] = pygame.transform.scale(disk_img,(width, disk_height))
-
-    for peg, disks in towers.items():
-        for i, disk in enumerate(disks):
-            img = disk_images[disk]
-            peg_x = peg_x_placement[peg] - peg_img.get_width() // 2
-            peg_y = peg_y_placement - (i+1) * img.get_height()
-            screen.blit(img, (peg_x, peg_y))
+    peg_base = peg_y_placement + peg_height
+    for peg_index, disks in towers.items():
+            for i, disk in enumerate(disks):
+                color = rainbow_colors[disk - 1]
+                width = base_width + (disk - 1) * width_step
+                x = peg_x_placement[peg_index] - width // 2
+                y = peg_base - (i + 1) * disk_height
+                pygame.draw.rect(screen, color, (x, y, width, disk_height))
 
 def main():
     screen = pygame.display.set_mode((900, 500))
@@ -107,7 +107,7 @@ def main():
     user_input = ""
 
     while stage < 3:
-        screen.fill(white)
+        screen.blit(menu_bg, (0, 0))
 
         if stage == 0:
             text = font.render("Enter number of disks (1-7): " + user_input, True, black)
@@ -115,9 +115,6 @@ def main():
             text = font.render("Enter origin tower (1,2,3): " + user_input, True, black)
         else:
             text = font.render("Enter destination tower (1,2,3): " + user_input, True, black)
-
-        draw_pegs(screen)
-        draw_disks(screen, towers)
 
         screen.blit(text, (50, 200))
         pygame.display.flip()
@@ -167,7 +164,7 @@ def main():
     clock = pygame.time.Clock()
 
     while True:
-        screen.fill((250, 250, 250))
+        screen.blit(menu_bg, (0, 0))
         draw_pegs(screen)
         draw_disks(screen, towers)
 
