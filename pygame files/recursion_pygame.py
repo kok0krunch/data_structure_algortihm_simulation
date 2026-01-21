@@ -24,8 +24,6 @@ black = (0, 0, 0)
 blue = (100, 149, 237)
 white = (250, 250, 250)
 move_delay = 0.6
-peg_img = pygame.image.load("images/peg_img.png").convert_alpha()
-disk_img = pygame.image.load("images/disk_img.png").convert_alpha()
 
 def draw_game_background(screen):
     rect_width = 1250
@@ -93,18 +91,56 @@ def draw_pegs(screen):
         pygame.draw.rect(screen, black, (x -5, 300, 10, 300))
 
 def draw_disks(screen, towers):
+    rainbow_colors = [(255, 102, 102),
+                      (255, 178, 102),
+                      (255, 255, 153), 
+                      (153, 255, 153),
+                      (153, 204, 255), 
+                      (178, 102, 255), 
+                      (255, 153, 255)] # Lighter rainbow colors
+    
     peg_base = peg_y_placement + peg_height
     for peg_index, disks in towers.items():
-            for i, disk in enumerate(disks):
-                color = rainbow_colors[disk - 1]
-                width = base_width + (disk - 1) * width_step
-                x = peg_x_placement[peg_index] - width // 2
-                y = peg_base - (i + 1) * disk_height
-                pygame.draw.rect(screen, color, (x, y, width, disk_height))
+        for i, disk in enumerate(disks):
+            color = rainbow_colors[disk - 1]
+            width = base_width + (disk - 1) * width_step
+            x = peg_x_placement[peg_index] - width // 2
+            y = peg_base - (i + 1) * disk_height
+            center_x = x + width // 2
+            center_y = y + disk_height // 2
+            
+            # Body of the Cat
+            pygame.draw.rect(screen, color, (x, y, width, disk_height))
+            
+            # Cat Ears (Triangles)
+            ear_size = 18
+            pygame.draw.polygon(screen, color, [(x, y), (x + ear_size, y), (x + ear_size // 2, y - ear_size)])
+            pygame.draw.polygon(screen, color, [(x + width - ear_size, y), (x + width, y), (x + width - ear_size // 2, y - ear_size)])
+
+            # Cat Eyes
+            eye_offset_x = width // 4
+            eye_radius = 5
+            for side in [-1, 1]: # Left and Right eyes
+                eye_x = center_x + (side * eye_offset_x)
+                pygame.draw.circle(screen, (40, 40, 40), (eye_x, center_y - 2), eye_radius) # Black part
+                pygame.draw.circle(screen, (255, 255, 255), (eye_x + 2, center_y - 4), 2) # White reflection
+
+            # Whiskers
+            whisker_color = (100, 100, 100)
+            whisker_len = 15
+            for side in [-1, 1]: 
+                start_x = center_x + (side * 8)
+                for angle in [-3, 0, 3]: # Three whiskers at different tilts
+                    pygame.draw.line(screen, whisker_color, 
+                                     (start_x, center_y), 
+                                     (start_x + (side * whisker_len), center_y + angle), 1)
+
+            # Small Pink Nose
+            pygame.draw.circle(screen, (255, 200, 200), (center_x, center_y + 2), 3)
 
 def recursion_menu(screen, clock, globalbg_img, back_btn):
     """Menu function for Tower of Hanoi recursion simulation"""
-    font = pygame.font.SysFont(None, 32)
+    font = pygame.font.SysFont("couriernew", 32, bold=True)
     
     num_disks = 0
     origin = 0
@@ -112,17 +148,26 @@ def recursion_menu(screen, clock, globalbg_img, back_btn):
     stage = 0
     user_input = ""
     
+    text_x = 1370 // 2
+    text_y = 810 // 2
+    
     while stage < 3:
         screen.blit(globalbg_img, (0, 0))
+        draw_game_background(screen)
+        
+        if back_btn.draw():
+            return None
         
         if stage == 0:
-            text = font.render("Enter number of disks (1-7): " + user_input, True, black)
+            text = "Enter number of disks (1-7): "
         elif stage == 1:
-            text = font.render("Enter origin tower (1,2,3): " + user_input, True, black)
+            text = "Enter origin tower (1,2,3): "
         else:
-            text = font.render("Enter destination tower (1,2,3): " + user_input, True, black)
-        
-        screen.blit(text, (50, 200))
+            text = "Enter destination tower (1,2,3): "
+
+        text_surface = font.render(text + user_input, True, black)
+        text_rect = text_surface.get_rect(center=(text_x, text_y))
+        screen.blit(text_surface, text_rect)
         pygame.display.flip()
         
         for event in pygame.event.get():
