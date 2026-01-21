@@ -91,14 +91,56 @@ def draw_pegs(screen):
         pygame.draw.rect(screen, black, (x -5, 300, 10, 300))
 
 def draw_disks(screen, towers):
+    rainbow_colors = [(255, 102, 102),
+                      (255, 178, 102),
+                      (255, 255, 153), 
+                      (153, 255, 153),
+                      (153, 204, 255), 
+                      (178, 102, 255), 
+                      (255, 153, 255)] # Lighter rainbow colors
+    
     peg_base = peg_y_placement + peg_height
     for peg_index, disks in towers.items():
-            for i, disk in enumerate(disks):
-                color = rainbow_colors[disk - 1]
-                width = base_width + (disk - 1) * width_step
-                x = peg_x_placement[peg_index] - width // 2
-                y = peg_base - (i + 1) * disk_height
-                pygame.draw.rect(screen, color, (x, y, width, disk_height))
+        for i, disk in enumerate(disks):
+            # 1. Dimensions
+            # We use the new pastel colors here
+            color = rainbow_colors[disk - 1]
+            width = base_width + (disk - 1) * width_step
+            x = peg_x_placement[peg_index] - width // 2
+            y = peg_base - (i + 1) * disk_height
+            center_x = x + width // 2
+            center_y = y + disk_height // 2
+            
+            # 2. Draw the Cat Ears (Triangles)
+            ear_size = 18
+            pygame.draw.polygon(screen, color, [(x, y), (x + ear_size, y), (x + ear_size // 2, y - ear_size)])
+            pygame.draw.polygon(screen, color, [(x + width - ear_size, y), (x + width, y), (x + width - ear_size // 2, y - ear_size)])
+
+            # 3. Draw the Body (Rectangle)
+            pygame.draw.rect(screen, color, (x, y, width, disk_height))
+
+            # 4. Draw Cute Eyes with "Shine"
+            eye_offset_x = width // 4
+            eye_radius = 5
+            for side in [-1, 1]: # Left and Right eyes
+                eye_x = center_x + (side * eye_offset_x)
+                # Black part of eye
+                pygame.draw.circle(screen, (40, 40, 40), (eye_x, center_y - 2), eye_radius)
+                # Tiny white highlight for "cuteness"
+                pygame.draw.circle(screen, (255, 255, 255), (eye_x + 2, center_y - 4), 2)
+
+            # 5. Draw Whiskers (Thin grey lines)
+            whisker_color = (100, 100, 100) # Soft grey instead of black
+            whisker_len = 15
+            for side in [-1, 1]: 
+                start_x = center_x + (side * 8)
+                for angle in [-3, 0, 3]: # Three whiskers at different tilts
+                    pygame.draw.line(screen, whisker_color, 
+                                     (start_x, center_y), 
+                                     (start_x + (side * whisker_len), center_y + angle), 1)
+
+            # 6. Small Pink Nose
+            pygame.draw.circle(screen, (255, 200, 200), (center_x, center_y + 2), 3)
 
 def recursion_menu(screen, clock, globalbg_img, back_btn):
     """Menu function for Tower of Hanoi recursion simulation"""
