@@ -167,9 +167,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
 
-        instruction_font = pygame.font.SysFont("courier new", 35)
+        instruction_font = pygame.font.SysFont("courier new", 24)
         instruction_font.set_bold(True)
-        instruction = "Welcome to Binary Search Tree maker! Input your number and enter to\n see it in front of you. If your binary search tree is cut off screen, use your \n up, left, down, and right keys to maneuver the tree. "
+        instruction = "Welcome to Binary Search Tree maker! Input your number and enter to\nsee it in front of you. If your binary search tree is cut off screen,\n use your up, left, down, and right keys to maneuver the tree. "
         instruction_surface = instruction_font.render(instruction, True, (0,0,0))
         x_margin=120
         y_margin=20+tree_offset_y
