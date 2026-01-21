@@ -87,7 +87,7 @@ class BinarySearchTree:
 #definitions
 def input_number():
     inputted_number=0
-    max_input=5
+    max_input=31
     binary_search_tree=BinarySearchTree()
     print("Binary Search Tree\nTo start type:")
     while True:
