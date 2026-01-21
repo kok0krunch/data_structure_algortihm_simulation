@@ -36,11 +36,7 @@ class BinarySearchTree:
         if node is None: # line of code to avoid exception when no node value is found equal to inputted number
             print(f"You do not have a {number} in your binary search tree.")
             return node
-        if number==self.root:
-            new_root = self._min_value_node(node.right) # For nodes with two child nodes
-            self.root = new_root.number #Changes parent node with the right child node
-            self.root = self._delete(self.root, new_root.number)
-        elif number<node.number:# traverse tree to find inputted number, no delete (left=smaller/same)
+        if number<node.number:# traverse tree to find inputted number, no delete (left=smaller/same)
             node.left=self.deletion_branching(node.left,number)
         elif number>node.number:# traverse tree to find inputted number, no delete (right=higher)
             node.right=self.deletion_branching(node.right,number)
@@ -54,7 +50,7 @@ class BinarySearchTree:
             else:
                 new_node = self._min_value_node(node.right) # For nodes with two child nodes
                 node.number = new_node.number #Changes parent node with the right child node
-                node.right = self._delete(node.right, new_node.number)
+                node.right = self.delete(node.right, new_node.number)
         return node
 
     def _min_value_node(self, node): 
@@ -108,7 +104,7 @@ def input_number():
                 user_input=input("Enter number to insert:")
                 inputted=int(user_input)
                 binary_search_tree.insert(inputted)
-                inputted_number=+1
+                inputted_number+=1
                 binary_search_tree.print_tree()
             except:
                 print("Invalid input. You have not entered an integer.")
@@ -124,7 +120,6 @@ def input_number():
             except:
                 print("Invalid input. You have not entered an integer.")
                 binary_search_tree.print_tree()
-                
         elif user_action.lower()=="s":
             try:
                 user_input=input("Enter number you want to search:")
