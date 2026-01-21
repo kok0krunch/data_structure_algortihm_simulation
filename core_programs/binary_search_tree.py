@@ -35,7 +35,6 @@ class BinarySearchTree:
     def deletion_branching(self, node, number):
         if node is None: # line of code to avoid exception when no node value is found equal to inputted number
             print(f"You do not have a {number} in your binary search tree.")
-            input_number()
             return node
         if number==self.root:
             new_root = self._min_value_node(node.right) # For nodes with two child nodes
@@ -70,9 +69,7 @@ class BinarySearchTree:
     def search_branching(self,node,number):
         if node is None: # line of code to avoid exception when no node value is found equal to inputted number
             print(f"You do not have a {number} in your binary search tree.")
-            return True
-            input_number()
-            return node
+            return None
         if number<node.number:# traverse tree to find inputted number
             node.left=self.search_branching(node.left,number)
         elif number>node.number:# traverse tree to find inputted number
@@ -126,7 +123,8 @@ def input_number():
                 input_number()
             except:
                 print("Invalid input. You have not entered an integer.")
-
+                binary_search_tree.print_tree()
+                
         elif user_action.lower()=="s":
             try:
                 user_input=input("Enter number you want to search:")
