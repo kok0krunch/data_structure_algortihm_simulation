@@ -11,8 +11,8 @@ def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=110):
     if node is None:
         return
     node_img = pygame.image.load("images/bst_images/bst_node.png").convert_alpha()
-    node_img = pygame.transform.scale(node_img, (125, 125))
-    node_rect = node_img.get_rect(center=(x, y+12))
+    node_img = pygame.transform.scale(node_img, (75, 75))
+    node_rect = node_img.get_rect(center=(x+5, y-2))
     radius=31.5
     screen.blit(node_img, node_rect)
     text = font.render(str(node.number), True, (0, 0, 0)) #shows text in screen
