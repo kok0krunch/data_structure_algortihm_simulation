@@ -130,6 +130,7 @@ def input_number():
             binary_search_tree.print_tree()
 
 # main program
-binary_search_tree=BinarySearchTree()
-print("Binary Search Tree\nTo start type:")
-input_number()
+if __name__ == "__main__":
+    binary_search_tree=BinarySearchTree()
+    print("Binary Search Tree\nTo start type:")
+    input_number()
