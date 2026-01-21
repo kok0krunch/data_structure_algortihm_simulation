@@ -131,6 +131,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     elif center_button_rect.collidepoint(mouse_pos):
                         tree_offset_x=initial_offset_x
                         tree_offset_y=initial_offset_y
+                    
+                    elif reset_button_rect.collidepoint(mouse_pos):
+                        bst=BinarySearchTree()
 
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
