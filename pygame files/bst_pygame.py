@@ -126,7 +126,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                             bst.delete(number)
 
                         elif current_action == "search":
-                            if bst.search(number):   # use your terminal search
+                            if bst.search_gui(number):   # use your terminal search
                                 status_message = f"{number} is FOUND!"
                                 status_color=(0, 200, 0)
                                 
@@ -197,6 +197,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         
         if status_message != "":
             status_font = pygame.font.SysFont("courier new", 40)
+            status_font.set_bold(True)
             status_surface = status_font.render(status_message, True, status_color)
             screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-90)))
 
