@@ -11,12 +11,14 @@ def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=110):
     if node is None:
         return
     node_img = pygame.image.load("images/bst_images/bst_node.png").convert_alpha()
-    node_img = pygame.transform.scale(node_img, (75, 75))
+    node_img = pygame.transform.scale(node_img, (75, 70))
     node_rect = node_img.get_rect(center=(x+5, y-2))
     radius=31.5
     screen.blit(node_img, node_rect)
-    text = font.render(str(node.number), True, (0, 0, 0)) #shows text in screen
-    screen.blit(text, text.get_rect(center=(x, y)))
+    node_font= pygame.font.SysFont("courier new", 16) 
+    node_font.set_bold(True)
+    node_value = font.render(str(node.number), True, (0, 0, 0)) #shows text in screen
+    screen.blit(node_value, node_value.get_rect(center=(x, y)))
 
     if node.left: #left child, number is lower/ equal to root.
         child_x = x - h_spacing
@@ -62,9 +64,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
     user_input = ""
     bst = BinarySearchTree()
-    font = pygame.font.SysFont("courier new", 23)
+    font = pygame.font.SysFont("courier new", 21)
     font.set_bold(True)
-    input_font = pygame.font.SysFont("courier new", 32) 
+    input_font = pygame.font.SysFont("courier new", 30) 
     input_font.set_bold(True)
     tree_offset_x=0
     tree_offset_y=0
@@ -158,7 +160,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(search_button_img, search_button_rect)
         
         if current_action==None:
-            opening_font = pygame.font.SysFont("courier new", 23) 
+            opening_font = pygame.font.SysFont("courier new", 16) 
             opening_font.set_bold(True)
             opening_text="Select an action to start"
             opening_message_surface = opening_font.render(opening_text, True, (0,0,0))
