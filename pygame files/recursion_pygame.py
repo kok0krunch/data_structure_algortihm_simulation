@@ -117,6 +117,9 @@ def recursion_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(globalbg_img, (0, 0))
         draw_game_background(screen)
         
+        if back_btn.draw():
+            return None
+        
         if stage == 0:
             text = "Enter number of disks (1-7): "
         elif stage == 1:
