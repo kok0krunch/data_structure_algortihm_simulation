@@ -74,6 +74,17 @@ class BinarySearchTree:
             if number==node.number:
                 print(f"{number} is found.")
         return node
+    
+    def search_gui(self, number):
+        current = self.root
+        while current:
+            if number == current.number:
+                return True
+            elif number < current.number:
+                current = current.left
+            else:
+                current = current.right
+        return False
 
     def print_tree(self): #show the tree
         self._print_tree(self.root, 0)
