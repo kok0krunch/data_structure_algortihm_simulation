@@ -63,6 +63,31 @@ class BinaryTree:
                 node.right = nodes[right_idx]
         self.root = nodes[0] if nodes else None
 
+    def build_incomplete_tree(self, target_depth: int, low: int = 10, high: int = 99) -> None:
+        """Build an incomplete binary tree up to target_depth with random values.
+        An incomplete tree is filled level by level, but the last level may not be completely filled."""
+        if target_depth < 1 or target_depth > self.max_depth:
+            raise ValueError(f"target_depth must be between 1 and {self.max_depth}")
+
+        # For incomplete trees, we'll generate a random number of nodes
+        # that's between a complete tree and a full tree
+        max_nodes = 2 ** target_depth - 1
+        min_nodes = 2 ** (target_depth - 1)  # At least fill up to previous level
+        
+        # Generate random number of nodes for incomplete tree
+        num_nodes = random.randint(min_nodes, max_nodes)
+        
+        available = high - low + 1
+        if available < num_nodes:
+            values = [random.randint(low, high) for _ in range(num_nodes)]
+        else:
+            values = random.sample(range(low, high + 1), num_nodes)
+        
+        # Build tree by inserting values in level-order (breadth-first)
+        self.root = None
+        for value in values:
+            self.insert(value)
+
     def preorder(self) -> List[int]:
         result: List[int] = []
         nodes: List[Node] = []  # Store node objects for animation
@@ -120,6 +145,11 @@ class BinaryTreeVisualizer:
         self.message_timer = 0
         self.traversal_result = ""
         self.traversal_type = ""
+        self.manual_mode = False  # Flag for manual input mode
+        self.manual_input_buffer = ""  # Buffer for manual node input (bulk mode)
+        self.manual_selected_parent: Optional[Node] = None  # Currently selected parent node
+        self.manual_insert_side: str = "left"  # Side to insert ('left' or 'right')
+        self.manual_value_buffer: str = ""  # Single value buffer for interactive insert
         
         # Animation state for traversal highlighting
         self.animation_active = False
@@ -147,35 +177,51 @@ class BinaryTreeVisualizer:
         self.large_font = pygame.font.SysFont("Courier New", 20, bold=True)
         self.title_font = pygame.font.SysFont("Courier New", 22, bold=True)
 
-    def draw_node(self, screen, x, y, value, highlighted=False):
-        """Draw a single node at the given position"""
+    def draw_node(self, screen, x, y, value, highlighted=False, radius=35):
+        """Draw a single node at the given position with dynamic radius"""
+        # Ensure all coordinates are integers for pixel-perfect rendering
+        radius = int(radius)
+        x = int(x)
+        y = int(y)
+        
         if self.node_img:
-            # Use the BST node image
-            node_rect = self.node_img.get_rect(center=(x, y))
-            if highlighted:
-                # Add pulsing highlight effect
-                pulse = abs(math.sin(pygame.time.get_ticks() * 0.01)) * 50 + 50
-                highlight_surf = pygame.Surface((100, 100))
-                highlight_surf.fill((255, 255, 0))
-                highlight_surf.set_alpha(pulse)
-                screen.blit(highlight_surf, (x - 40, y - 40))
-            screen.blit(self.node_img, node_rect)
-        else:
-            # Fallback to circle
+            # Use the BST node image with proper scaling
+            # Image is a circle, so scale it to be a perfect circle with diameter = 2 * radius
+            img_size = int(radius * 2)
+            scaled_img = pygame.transform.scale(self.node_img, (img_size, img_size))
+            
+            # Draw highlight if needed
             if highlighted:
                 # Pulsing highlight effect
-                pulse = abs(math.sin(pygame.time.get_ticks() * 0.01)) * 30 + 30
-                pygame.draw.circle(screen, (255, 255, 0), (x, y), 35 + pulse//2)
+                pulse = int(abs(math.sin(pygame.time.get_ticks() * 0.005)) * 3) + 1
+                highlight_size = img_size + pulse * 2
+                highlight_surf = pygame.Surface((highlight_size, highlight_size), pygame.SRCALPHA)
+                pygame.draw.circle(highlight_surf, (255, 255, 0, 150), (highlight_size//2, highlight_size//2), highlight_size//2)
+                screen.blit(highlight_surf, (x - highlight_size//2, y - highlight_size//2))
+            
+            # Blit the scaled image centered at (x, y)
+            node_rect = scaled_img.get_rect(center=(x, y))
+            screen.blit(scaled_img, node_rect)
+        else:
+            # Fallback to perfect circles if image not available
+            if highlighted:
+                pulse = int(abs(math.sin(pygame.time.get_ticks() * 0.005)) * 8) + 2
+                pygame.draw.circle(screen, (255, 255, 0), (x, y), radius + pulse)
             
             color = (100, 255, 100) if highlighted else self.node_color
-            pygame.draw.circle(screen, color, (x, y), 35)
-            pygame.draw.circle(screen, (0, 0, 0), (x, y), 35, 3)
+            pygame.draw.circle(screen, color, (x, y), radius)
+            pygame.draw.circle(screen, (0, 0, 0), (x, y), radius, 3)
         
-        # Draw value text with different color when highlighted
+        # Draw value text centered inside the node (offset slightly to the left)
+        font_size = max(10, int(radius * 0.45))
+        dynamic_font = pygame.font.SysFont("Courier New", font_size, bold=True)
         text_color = (255, 0, 0) if highlighted else (0, 0, 0)
-        text = self.font.render(str(value), True, text_color)
-        text_rect = text.get_rect(center=(x, y))
-        screen.blit(text, text_rect)
+        text_surface = dynamic_font.render(str(value), True, text_color)
+        
+        # Center text with slight left offset
+        text_x = x - text_surface.get_width() // 2 - 5
+        text_y = y - text_surface.get_height() // 2
+        screen.blit(text_surface, (text_x, text_y))
 
     def draw_line(self, screen, start_pos, end_pos):
         """Draw a line between two nodes"""
@@ -193,8 +239,9 @@ class BinaryTreeVisualizer:
         tree_area_width = self.screen_width - 350
         tree_area_height = 500
         
-        # Calculate minimum spacing needed for nodes (considering node size)
-        min_node_spacing = 65  # Minimum distance between nodes
+        # Calculate minimum spacing needed for nodes (considering node size + padding)
+        # Node diameter is 70 (radius 35), add extra padding for clarity
+        min_node_spacing = 85  # Increased from 65 to prevent overlap
         
         # Calculate positions using a different approach for better spacing
         def get_tree_width(level):
@@ -209,6 +256,9 @@ class BinaryTreeVisualizer:
         # Scale down if tree is too wide
         scale_factor = min(1.0, tree_area_width / max_width) if max_width > 0 else 1.0
         
+        # Adjust node radius based on depth to prevent overlap at deeper levels
+        adjusted_node_radius = max(20, 35 - (depth - 3) * 3) if depth > 3 else 35
+        
         def position_nodes_recursive(node, level, position_in_level, positions_at_level):
             if node is None or level >= depth:
                 return
@@ -216,8 +266,8 @@ class BinaryTreeVisualizer:
             if level not in positions:
                 positions[level] = {}
             
-            # Calculate vertical position
-            level_spacing = tree_area_height // max(depth, 1)
+            # Calculate vertical position with better spacing
+            level_spacing = max(90, tree_area_height // max(depth, 1))  # Minimum vertical spacing
             y = tree_area_y + level * level_spacing + 30  # Add offset
             
             # Calculate horizontal position using tree structure
@@ -266,6 +316,9 @@ class BinaryTreeVisualizer:
         
         positions = self.calculate_positions(self.current_depth)
         
+        # Calculate node radius based on depth - ensure it's an integer for perfect circles
+        node_radius = int(max(20, 35 - (self.current_depth - 3) * 3)) if self.current_depth > 3 else 35
+        
         # Draw connections first
         def draw_connections(node, level):
             if node is None or level not in positions or node not in positions[level]:
@@ -302,11 +355,15 @@ class BinaryTreeVisualizer:
                 80 <= node_pos[1] <= self.screen_height - 50):
                 
                 # Check if this node should be highlighted
-                highlighted = (self.animation_active and 
-                             self.current_highlight_index < len(self.animation_nodes) and
-                             node == self.animation_nodes[self.current_highlight_index])
+                # Hide manual selection highlighting when traversal is active
+                highlighted = (
+                    (self.animation_active and 
+                     self.current_highlight_index < len(self.animation_nodes) and
+                     node == self.animation_nodes[self.current_highlight_index])
+                    or (self.manual_mode and self.manual_selected_parent is node and not self.animation_active)
+                )
                 
-                self.draw_node(screen, node_pos[0], node_pos[1], node.value, highlighted)
+                self.draw_node(screen, node_pos[0], node_pos[1], node.value, highlighted, node_radius)
             
             # Recursively draw children
             if node.left:
@@ -350,26 +407,115 @@ class BinaryTreeVisualizer:
         
         y_offset = 50
         
-        # Depth selector
+        # Depth selector with Manual toggle on same line
         depth_label = self.font.render(f"Tree Depth: {self.current_depth}", True, (50, 50, 50))
         screen.blit(depth_label, (panel_x + 20, panel_y + y_offset))
+        
+        # Manual mode toggle (right side of depth text)
+        manual_toggle_rect = pygame.Rect(panel_x + 200, panel_y + y_offset - 2, 90, 28)
+        pygame.draw.rect(screen, (120, 160, 220) if self.manual_mode else (180, 180, 180), manual_toggle_rect)
+        pygame.draw.rect(screen, (80, 120, 180), manual_toggle_rect, 2)
+        toggle_text = self.small_font.render("Manual" if self.manual_mode else "Manual", True, (255, 255, 255))
+        screen.blit(toggle_text, (manual_toggle_rect.centerx - toggle_text.get_width() // 2,
+                                  manual_toggle_rect.centery - toggle_text.get_height() // 2))
+        
         y_offset += 30
         
-        # Buttons
+        # Manual input controls section (only show when manual mode is active)
+        # Initialize all manual control rects
+        manual_input_rect = None
+        left_rect = None
+        right_rect = None
+        manual_insert_rect = None
+        set_root_rect = None
+        clear_sel_rect = None
+        
+        if self.manual_mode:
+            # Manual input section - aligned to the right
+            manual_start_y = panel_y + y_offset
+            manual_right_x = panel_x + 155  # Align to right side below manual button
+            
+            # Input label and box (compact, on same line)
+            input_label = self.small_font.render("Val:", True, (50, 50, 50))
+            screen.blit(input_label, (manual_right_x, manual_start_y))
+            
+            manual_input_rect = pygame.Rect(manual_right_x + 35, manual_start_y - 2, 145, 24)
+            pygame.draw.rect(screen, (255, 255, 255), manual_input_rect)
+            pygame.draw.rect(screen, (100, 100, 100), manual_input_rect, 2)
+            input_text = self.small_font.render(self.manual_value_buffer, True, (0, 0, 0))
+            screen.blit(input_text, (manual_input_rect.x + 6, manual_input_rect.y + 4))
+            
+            # Parent selection info
+            parent_val = self.manual_selected_parent.value if self.manual_selected_parent else "None"
+            parent_text = self.small_font.render(f"Parent: {parent_val}", True, (50, 50, 50))
+            screen.blit(parent_text, (manual_right_x, manual_start_y + 28))
+            
+            # Side selection buttons (Left/Right)
+            side_y = manual_start_y + 52
+            left_rect = pygame.Rect(manual_right_x, side_y, 55, 26)
+            right_rect = pygame.Rect(manual_right_x + 60, side_y, 55, 26)
+            
+            pygame.draw.rect(screen, (100, 200, 100) if self.manual_insert_side == "left" else (180, 180, 180), left_rect)
+            pygame.draw.rect(screen, (50, 150, 50), left_rect, 2)
+            left_text = self.small_font.render("Left", True, (255, 255, 255))
+            screen.blit(left_text, (left_rect.centerx - left_text.get_width() // 2,
+                                    left_rect.centery - left_text.get_height() // 2))
+            
+            pygame.draw.rect(screen, (100, 200, 100) if self.manual_insert_side == "right" else (180, 180, 180), right_rect)
+            pygame.draw.rect(screen, (50, 150, 50), right_rect, 2)
+            right_text = self.small_font.render("Right", True, (255, 255, 255))
+            screen.blit(right_text, (right_rect.centerx - right_text.get_width() // 2,
+                                     right_rect.centery - right_text.get_height() // 2))
+            
+            # Insert button
+            manual_insert_rect = pygame.Rect(manual_right_x + 120, side_y, 65, 26)
+            pygame.draw.rect(screen, (150, 100, 200), manual_insert_rect)
+            pygame.draw.rect(screen, (100, 50, 150), manual_insert_rect, 2)
+            ins_text = self.small_font.render("Insert", True, (255, 255, 255))
+            screen.blit(ins_text, (manual_insert_rect.centerx - ins_text.get_width() // 2,
+                                   manual_insert_rect.centery - ins_text.get_height() // 2))
+            
+            # Set Root / Clear Selection buttons
+            action_y = side_y + 32
+            if self.tree.root is None:
+                set_root_rect = pygame.Rect(manual_right_x, action_y, 85, 24)
+                pygame.draw.rect(screen, (100, 200, 100), set_root_rect)
+                pygame.draw.rect(screen, (50, 150, 50), set_root_rect, 2)
+                root_text = self.small_font.render("Set Root", True, (255, 255, 255))
+                screen.blit(root_text, (set_root_rect.centerx - root_text.get_width() // 2,
+                                        set_root_rect.centery - root_text.get_height() // 2))
+            else:
+                clear_sel_rect = pygame.Rect(manual_right_x, action_y, 110, 24)
+                pygame.draw.rect(screen, (200, 150, 120), clear_sel_rect)
+                pygame.draw.rect(screen, (150, 100, 80), clear_sel_rect, 2)
+                clr_text = self.small_font.render("Clear Sel.", True, (255, 255, 255))
+                screen.blit(clr_text, (clear_sel_rect.centerx - clr_text.get_width() // 2,
+                                       clear_sel_rect.centery - clr_text.get_height() // 2))
+        
+        # Build buttons section (fixed position - not affected by manual mode)
         button_width = 110
         button_height = 30
         button_spacing = 12
         
-        # Build Tree button
-        build_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, button_width, button_height)
-        pygame.draw.rect(screen, (100, 200, 100), build_rect)
-        pygame.draw.rect(screen, (50, 150, 50), build_rect, 2)
-        build_text = self.font.render("Build Tree", True, (255, 255, 255))
-        screen.blit(build_text, (build_rect.centerx - build_text.get_width() // 2,
-                                build_rect.centery - build_text.get_height() // 2))
+        # Build Complete Tree button
+        complete_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, 105, button_height)
+        pygame.draw.rect(screen, (100, 200, 100), complete_rect)
+        pygame.draw.rect(screen, (50, 150, 50), complete_rect, 2)
+        complete_text = self.small_font.render("Complete", True, (255, 255, 255))
+        screen.blit(complete_text, (complete_rect.centerx - complete_text.get_width() // 2,
+                                complete_rect.centery - complete_text.get_height() // 2))
         y_offset += button_height + button_spacing
         
-        # Depth buttons
+        # Build Incomplete Tree button
+        incomplete_build_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, 105, button_height)
+        pygame.draw.rect(screen, (180, 140, 100), incomplete_build_rect)
+        pygame.draw.rect(screen, (130, 90, 50), incomplete_build_rect, 2)
+        incomplete_build_text = self.small_font.render("Incomplete", True, (255, 255, 255))
+        screen.blit(incomplete_build_text, (incomplete_build_rect.centerx - incomplete_build_text.get_width() // 2,
+                                incomplete_build_rect.centery - incomplete_build_text.get_height() // 2))
+        y_offset += button_height + button_spacing
+        
+        # Depth adjustment buttons
         depth_up_rect = pygame.Rect(panel_x + 20, panel_y + y_offset, 55, 28)
         depth_down_rect = pygame.Rect(panel_x + 85, panel_y + y_offset, 55, 28)
         
@@ -431,8 +577,228 @@ class BinaryTreeVisualizer:
             screen.blit(msg, (panel_x + 20, panel_y + panel_height - 50))
             self.message_timer -= 1
         
-        return (build_rect, depth_up_rect, depth_down_rect, clear_rect, 
-                preorder_rect, inorder_rect, postorder_rect)
+        return (complete_rect, incomplete_build_rect, depth_up_rect, depth_down_rect, clear_rect,
+                preorder_rect, inorder_rect, postorder_rect,
+                manual_toggle_rect, manual_input_rect, left_rect, right_rect, manual_insert_rect, set_root_rect, clear_sel_rect)
+    
+    def draw_setup_prompt(self, screen):
+        """Draw the initial setup prompt to choose auto-generate or manual input"""
+        # Semi-transparent overlay
+        overlay = pygame.Surface((self.screen_width, self.screen_height))
+        overlay.set_alpha(200)
+        overlay.fill((50, 50, 50))
+        screen.blit(overlay, (0, 0))
+        
+        # Dialog box
+        dialog_width = 500
+        dialog_height = 300
+        dialog_x = (self.screen_width - dialog_width) // 2
+        dialog_y = (self.screen_height - dialog_height) // 2
+        
+        # Draw dialog background
+        pygame.draw.rect(screen, (240, 240, 240), (dialog_x, dialog_y, dialog_width, dialog_height))
+        pygame.draw.rect(screen, (50, 50, 50), (dialog_x, dialog_y, dialog_width, dialog_height), 3)
+        
+        # Draw title
+        title_font = pygame.font.SysFont("Courier New", 28, bold=True)
+        title = title_font.render("Binary Tree Setup", True, (50, 50, 50))
+        screen.blit(title, (dialog_x + (dialog_width - title.get_width()) // 2, dialog_y + 30))
+        
+        # Draw question
+        question_font = pygame.font.SysFont("Courier New", 16)
+        question = question_font.render("How do you want to build the tree?", True, (50, 50, 50))
+        screen.blit(question, (dialog_x + (dialog_width - question.get_width()) // 2, dialog_y + 90))
+        
+        # Auto-generate button
+        auto_rect = pygame.Rect(dialog_x + 30, dialog_y + 150, 200, 50)
+        pygame.draw.rect(screen, (100, 200, 100), auto_rect)
+        pygame.draw.rect(screen, (50, 150, 50), auto_rect, 3)
+        auto_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Auto-Generate", True, (255, 255, 255))
+        screen.blit(auto_text, (auto_rect.centerx - auto_text.get_width() // 2,
+                               auto_rect.centery - auto_text.get_height() // 2))
+        
+        # Manual input button
+        manual_rect = pygame.Rect(dialog_x + 270, dialog_y + 150, 200, 50)
+        pygame.draw.rect(screen, (200, 150, 100), manual_rect)
+        pygame.draw.rect(screen, (150, 100, 50), manual_rect, 3)
+        manual_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Manual Input", True, (255, 255, 255))
+        screen.blit(manual_text, (manual_rect.centerx - manual_text.get_width() // 2,
+                                 manual_rect.centery - manual_text.get_height() // 2))
+        
+        return auto_rect, manual_rect
+    
+    def draw_manual_input_screen(self, screen):
+        """Draw interactive manual input interface with live tree preview."""
+        # Draw tree behind the overlay for real-time preview
+        self.draw_tree(screen)
+        
+        # Semi-transparent overlay
+        overlay = pygame.Surface((self.screen_width, self.screen_height))
+        overlay.set_alpha(160)
+        overlay.fill((50, 50, 50))
+        screen.blit(overlay, (0, 0))
+        
+        # Input panel
+        panel_width = 700
+        panel_height = 420
+        panel_x = (self.screen_width - panel_width) // 2
+        panel_y = (self.screen_height - panel_height) // 2
+        
+        # Draw panel background
+        pygame.draw.rect(screen, (240, 240, 240), (panel_x, panel_y, panel_width, panel_height))
+        pygame.draw.rect(screen, (50, 50, 50), (panel_x, panel_y, panel_width, panel_height), 3)
+        
+        # Draw title
+        title_font = pygame.font.SysFont("Courier New", 24, bold=True)
+        title = title_font.render("Build Tree Manually", True, (50, 50, 50))
+        screen.blit(title, (panel_x + (panel_width - title.get_width()) // 2, panel_y + 16))
+        
+        # Instructions
+        instr_font = pygame.font.SysFont("Courier New", 14)
+        instr1 = instr_font.render("1) Type a number", True, (50, 50, 50))
+        instr2 = instr_font.render("2) Click a node to select parent", True, (50, 50, 50))
+        instr3 = instr_font.render("3) Choose Left/Right, then Insert", True, (50, 50, 50))
+        screen.blit(instr1, (panel_x + 20, panel_y + 54))
+        screen.blit(instr2, (panel_x + 20, panel_y + 74))
+        screen.blit(instr3, (panel_x + 20, panel_y + 94))
+        
+        # Input box for single value
+        input_box_rect = pygame.Rect(panel_x + 20, panel_y + 122, panel_width - 40, 46)
+        pygame.draw.rect(screen, (255, 255, 255), input_box_rect)
+        pygame.draw.rect(screen, (100, 100, 100), input_box_rect, 2)
+        input_text = instr_font.render(self.manual_value_buffer, True, (0, 0, 0))
+        screen.blit(input_text, (input_box_rect.x + 10, input_box_rect.y + 12))
+        
+        # Selected parent info
+        info_font = pygame.font.SysFont("Courier New", 14, bold=True)
+        parent_val = self.manual_selected_parent.value if self.manual_selected_parent else "None"
+        parent_text = info_font.render(f"Selected Parent: {parent_val}", True, (50, 50, 50))
+        screen.blit(parent_text, (panel_x + 20, panel_y + 180))
+        
+        # Side selection buttons
+        left_rect = pygame.Rect(panel_x + 20, panel_y + 210, 90, 36)
+        right_rect = pygame.Rect(panel_x + 120, panel_y + 210, 90, 36)
+        
+        left_active = (self.manual_insert_side == "left")
+        right_active = (self.manual_insert_side == "right")
+        pygame.draw.rect(screen, (100, 200, 100) if left_active else (180, 180, 180), left_rect)
+        pygame.draw.rect(screen, (50, 150, 50), left_rect, 2)
+        left_text = pygame.font.SysFont("Courier New", 14, bold=True).render("Left", True, (255, 255, 255))
+        screen.blit(left_text, (left_rect.centerx - left_text.get_width() // 2,
+                                left_rect.centery - left_text.get_height() // 2))
+        
+        pygame.draw.rect(screen, (100, 200, 100) if right_active else (180, 180, 180), right_rect)
+        pygame.draw.rect(screen, (50, 150, 50), right_rect, 2)
+        right_text = pygame.font.SysFont("Courier New", 14, bold=True).render("Right", True, (255, 255, 255))
+        screen.blit(right_text, (right_rect.centerx - right_text.get_width() // 2,
+                                 right_rect.centery - right_text.get_height() // 2))
+        
+        # Insert / Set Root / Finish / Cancel buttons
+        insert_rect = pygame.Rect(panel_x + 230, panel_y + 210, 120, 38)
+        pygame.draw.rect(screen, (150, 100, 200), insert_rect)
+        pygame.draw.rect(screen, (100, 50, 150), insert_rect, 2)
+        insert_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Insert", True, (255, 255, 255))
+        screen.blit(insert_text, (insert_rect.centerx - insert_text.get_width() // 2,
+                                  insert_rect.centery - insert_text.get_height() // 2))
+        
+        set_root_rect = None
+        if self.tree.root is None:
+            set_root_rect = pygame.Rect(panel_x + 360, panel_y + 210, 140, 38)
+            pygame.draw.rect(screen, (100, 200, 100), set_root_rect)
+            pygame.draw.rect(screen, (50, 150, 50), set_root_rect, 2)
+            set_root_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Set as Root", True, (255, 255, 255))
+            screen.blit(set_root_text, (set_root_rect.centerx - set_root_text.get_width() // 2,
+                                        set_root_rect.centery - set_root_text.get_height() // 2))
+        
+        finish_rect = pygame.Rect(panel_x + 20, panel_y + 268, 150, 40)
+        pygame.draw.rect(screen, (100, 150, 200), finish_rect)
+        pygame.draw.rect(screen, (50, 100, 150), finish_rect, 2)
+        finish_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Finish", True, (255, 255, 255))
+        screen.blit(finish_text, (finish_rect.centerx - finish_text.get_width() // 2,
+                                  finish_rect.centery - finish_text.get_height() // 2))
+        
+        cancel_rect = pygame.Rect(panel_x + panel_width - 170, panel_y + 268, 150, 40)
+        pygame.draw.rect(screen, (200, 100, 100), cancel_rect)
+        pygame.draw.rect(screen, (150, 50, 50), cancel_rect, 2)
+        cancel_text = pygame.font.SysFont("Courier New", 16, bold=True).render("Cancel", True, (255, 255, 255))
+        screen.blit(cancel_text, (cancel_rect.centerx - cancel_text.get_width() // 2,
+                                 cancel_rect.centery - cancel_text.get_height() // 2))
+        
+        # Guidance
+        guide_font = pygame.font.SysFont("Courier New", 12)
+        guide = guide_font.render("Tip: Click a node in the background to select parent.", True, (100, 100, 100))
+        screen.blit(guide, (panel_x + 20, panel_y + panel_height - 52))
+        
+        return input_box_rect, left_rect, right_rect, insert_rect, set_root_rect, finish_rect, cancel_rect
+
+    def _compute_depth(self, node: Optional[Node]) -> int:
+        if node is None:
+            return 0
+        return 1 + max(self._compute_depth(node.left), self._compute_depth(node.right))
+
+    def _update_current_depth(self) -> None:
+        self.current_depth = max(1, self._compute_depth(self.tree.root))
+
+    def get_node_at_click(self, pos) -> Optional[Node]:
+        """Return the node at the clicked position, if any."""
+        positions = self.calculate_positions(self.current_depth)
+        radius = 35
+        for level in positions:
+            for node, (x, y) in positions[level].items():
+                dx = pos[0] - x
+                dy = pos[1] - y
+                if dx * dx + dy * dy <= radius * radius:
+                    return node
+        return None
+
+    def insert_manual_value(self) -> bool:
+        """Insert the value in manual_value_buffer using current selection."""
+        try:
+            value = int(self.manual_value_buffer.strip())
+        except ValueError:
+            self.message = "Enter a valid integer"
+            self.message_timer = 120
+            return False
+
+        # Insert as root if empty or requested
+        if self.tree.root is None:
+            self.tree.root = Node(value)
+            self.manual_selected_parent = self.tree.root
+            self._update_current_depth()
+            self.message = "Root node set"
+            self.message_timer = 90
+            return True
+
+        # Need a selected parent
+        if not self.manual_selected_parent:
+            self.message = "Select a parent by clicking a node"
+            self.message_timer = 120
+            return False
+
+        parent = self.manual_selected_parent
+        side = self.manual_insert_side
+        if side == "left":
+            if parent.left is None:
+                parent.left = Node(value)
+                self._update_current_depth()
+                self.message = "Inserted at left child"
+                self.message_timer = 90
+                return True
+            else:
+                self.message = "Left child already occupied"
+                self.message_timer = 120
+                return False
+        else:
+            if parent.right is None:
+                parent.right = Node(value)
+                self._update_current_depth()
+                self.message = "Inserted at right child"
+                self.message_timer = 90
+                return True
+            else:
+                self.message = "Right child already occupied"
+                self.message_timer = 120
+                return False
     
     def draw_traversal_output(self, screen):
         """Draw traversal results at the bottom of the window"""
@@ -497,16 +863,69 @@ class BinaryTreeVisualizer:
             result_text = result_font.render(result_str, True, (100, 50, 50))
             screen.blit(result_text, (bottom_panel_x + 20, result_y))
 
+    def build_manual_tree(self, values_str):
+        """Build tree from manually entered values"""
+        try:
+            # Parse the input string into integers
+            values = [int(x) for x in values_str.split()]
+            
+            if not values:
+                self.message = "Please enter at least one value"
+                self.message_timer = 120
+                return False
+            
+            # Clear and rebuild tree
+            self.tree = BinaryTree(max_depth=self.max_depth)
+            
+            # Insert values using level-order insertion
+            for value in values:
+                self.tree.insert(value)
+            
+            self.message = f"Built manual tree with {len(values)} nodes"
+            self.message_timer = 120
+            self.traversal_result = ""
+            self.traversal_type = ""
+            # Reset animation
+            self.animation_active = False
+            self.animation_nodes = []
+            self.current_highlight_index = 0
+            
+            return True
+            
+        except ValueError:
+            self.message = "Error: Please enter valid integers only"
+            self.message_timer = 120
+            return False
+    
     def handle_event(self, event, rects):
         """Handle user input events"""
+        # Unpack rects including manual controls (some may be None)
+        (
+            complete_rect, incomplete_build_rect, depth_up_rect, depth_down_rect, clear_rect,
+            preorder_rect, inorder_rect, postorder_rect,
+            manual_toggle_rect, manual_input_rect, left_rect, right_rect, manual_insert_rect, set_root_rect, clear_sel_rect
+        ) = rects
+
+        # Keyboard input for manual mode
+        if event.type == pygame.KEYDOWN and self.manual_mode:
+            if event.key == pygame.K_BACKSPACE:
+                self.manual_value_buffer = self.manual_value_buffer[:-1]
+            elif event.key == pygame.K_RETURN:
+                if self.insert_manual_value():
+                    self.manual_value_buffer = ""
+            else:
+                # Allow digits and optional leading minus
+                ch = event.unicode
+                if len(self.manual_value_buffer) < 6 and (ch.isdigit() or (ch == '-' and len(self.manual_value_buffer) == 0)):
+                    self.manual_value_buffer += ch
+
         if event.type == pygame.MOUSEBUTTONDOWN:
-            build_rect, depth_up_rect, depth_down_rect, clear_rect, preorder_rect, inorder_rect, postorder_rect = rects
-            
-            if build_rect.collidepoint(event.pos):
+            # Build Complete
+            if complete_rect and complete_rect.collidepoint(event.pos):
                 try:
                     self.tree = BinaryTree(max_depth=self.max_depth)
                     self.tree.build_full_tree(self.current_depth)
-                    self.message = f"Built tree with depth {self.current_depth}"
+                    self.message = f"Built complete tree with depth {self.current_depth}"
                     self.message_timer = 120
                     self.traversal_result = ""
                     self.traversal_type = ""
@@ -517,30 +936,47 @@ class BinaryTreeVisualizer:
                 except Exception as e:
                     self.message = f"Error: {str(e)[:30]}..."
                     self.message_timer = 120
-            
-            elif depth_up_rect.collidepoint(event.pos):
+            # Build Incomplete
+            elif incomplete_build_rect and incomplete_build_rect.collidepoint(event.pos):
+                try:
+                    self.tree = BinaryTree(max_depth=self.max_depth)
+                    self.tree.build_incomplete_tree(self.current_depth)
+                    self.message = f"Built incomplete tree with depth {self.current_depth}"
+                    self.message_timer = 120
+                    self.traversal_result = ""
+                    self.traversal_type = ""
+                    # Reset animation
+                    self.animation_active = False
+                    self.animation_nodes = []
+                    self.current_highlight_index = 0
+                except Exception as e:
+                    self.message = f"Error: {str(e)[:30]}..."
+                    self.message_timer = 120
+            # Depth+
+            elif depth_up_rect and depth_up_rect.collidepoint(event.pos):
                 if self.current_depth < self.max_depth:
                     self.current_depth += 1
                     self.message = f"Depth set to {self.current_depth}"
                     self.message_timer = 60
-            
-            elif depth_down_rect.collidepoint(event.pos):
+            # Depth-
+            elif depth_down_rect and depth_down_rect.collidepoint(event.pos):
                 if self.current_depth > 1:
                     self.current_depth -= 1
                     self.message = f"Depth set to {self.current_depth}"
                     self.message_timer = 60
-            
-            elif clear_rect.collidepoint(event.pos):
+            # Clear Tree
+            elif clear_rect and clear_rect.collidepoint(event.pos):
                 self.tree = BinaryTree()
                 self.traversal_result = ""
                 self.traversal_type = ""
                 self.message = "Tree cleared"
                 self.message_timer = 60
-            
-            elif preorder_rect.collidepoint(event.pos):
+            # Traversals
+            elif preorder_rect and preorder_rect.collidepoint(event.pos):
                 if self.tree.root:
                     result, nodes = self.tree.preorder()
-                    self.traversal_result = result
+                    # Extract values from nodes to ensure display matches animation
+                    self.traversal_result = [node.value for node in nodes]
                     self.traversal_type = "Pre-Order"
                     self.animation_nodes = nodes
                     self.animation_active = True
@@ -551,11 +987,11 @@ class BinaryTreeVisualizer:
                 else:
                     self.message = "No tree to traverse!"
                     self.message_timer = 60
-            
-            elif inorder_rect.collidepoint(event.pos):
+            elif inorder_rect and inorder_rect.collidepoint(event.pos):
                 if self.tree.root:
                     result, nodes = self.tree.inorder()
-                    self.traversal_result = result
+                    # Extract values from nodes to ensure display matches animation
+                    self.traversal_result = [node.value for node in nodes]
                     self.traversal_type = "In-Order"
                     self.animation_nodes = nodes
                     self.animation_active = True
@@ -566,11 +1002,11 @@ class BinaryTreeVisualizer:
                 else:
                     self.message = "No tree to traverse!"
                     self.message_timer = 60
-            
-            elif postorder_rect.collidepoint(event.pos):
+            elif postorder_rect and postorder_rect.collidepoint(event.pos):
                 if self.tree.root:
                     result, nodes = self.tree.postorder()
-                    self.traversal_result = result
+                    # Extract values from nodes to ensure display matches animation
+                    self.traversal_result = [node.value for node in nodes]
                     self.traversal_type = "Post-Order"
                     self.animation_nodes = nodes
                     self.animation_active = True
@@ -581,6 +1017,31 @@ class BinaryTreeVisualizer:
                 else:
                     self.message = "No tree to traverse!"
                     self.message_timer = 60
+
+            # Manual controls
+            elif manual_toggle_rect and manual_toggle_rect.collidepoint(event.pos):
+                self.manual_mode = not self.manual_mode
+                self.message = f"Manual mode {'ON' if self.manual_mode else 'OFF'}"
+                self.message_timer = 60
+            elif self.manual_mode and left_rect and left_rect.collidepoint(event.pos):
+                self.manual_insert_side = "left"
+            elif self.manual_mode and right_rect and right_rect.collidepoint(event.pos):
+                self.manual_insert_side = "right"
+            elif self.manual_mode and manual_insert_rect and manual_insert_rect.collidepoint(event.pos):
+                if self.insert_manual_value():
+                    self.manual_value_buffer = ""
+            elif self.manual_mode and set_root_rect and set_root_rect.collidepoint(event.pos):
+                if self.insert_manual_value():
+                    self.manual_value_buffer = ""
+            elif self.manual_mode and clear_sel_rect and clear_sel_rect.collidepoint(event.pos):
+                self.manual_selected_parent = None
+            else:
+                # Click in tree area to select parent
+                panel_x = self.screen_width - 370
+                if self.manual_mode and event.pos[0] < panel_x:
+                    node = self.get_node_at_click(event.pos)
+                    if node:
+                        self.manual_selected_parent = node
 
 def bt_menu(screen, clock, globalbg_img, back_btn):
     """Binary Tree menu function"""
@@ -602,7 +1063,7 @@ def bt_menu(screen, clock, globalbg_img, back_btn):
         # Draw tree
         visualizer.draw_tree(screen)
         
-        # Draw controls and get button rectangles
+        # Draw controls and get button rectangles (includes manual input controls)
         rects = visualizer.draw_controls(screen)
         
         # Draw traversal output at bottom
