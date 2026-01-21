@@ -88,8 +88,6 @@ class BinarySearchTree:
 def input_number():
     inputted_number=0
     max_input=31
-    binary_search_tree=BinarySearchTree()
-    print("Binary Search Tree\nTo start type:")
     while True:
         user_action=input("'I': Insert value\n'D':Delete value\n'S':Seacrh\n'F':Finish input\nYour choice:")
         if user_action.lower()=="f": #programs prints tree when user types done
@@ -116,7 +114,6 @@ def input_number():
                 binary_search_tree.delete(inputted)
                 inputted_number-=1
                 binary_search_tree.print_tree()
-                input_number()
             except:
                 print("Invalid input. You have not entered an integer.")
                 binary_search_tree.print_tree()
@@ -133,4 +130,6 @@ def input_number():
             binary_search_tree.print_tree()
 
 # main program
+binary_search_tree=BinarySearchTree()
+print("Binary Search Tree\nTo start type:")
 input_number()
