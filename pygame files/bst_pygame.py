@@ -40,24 +40,24 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     delete_button_img = pygame.image.load("images/bst_images/bst_delete.png").convert_alpha()
     insert_button_img = pygame.image.load("images/bst_images/bst_insert.png").convert_alpha()
     center_button_img = pygame.image.load("images/bst_images/bst_center.png").convert_alpha()
+    reset_button_img = pygame.image.load("images/bst_images/bst_reset.png").convert_alpha()
     search_button_img = pygame.image.load("images/bst_images/bst_search.png").convert_alpha()
-    finish_button_img = pygame.image.load("images/bst_images/bst_done.png").convert_alpha()
 
     #graphics_scale
     input_box_img = pygame.transform.scale(input_box_img, (300, 300))
     delete_button_img = pygame.transform.scale(delete_button_img, (100, 100))
     insert_button_img = pygame.transform.scale(insert_button_img, (100, 100))
     center_button_img = pygame.transform.scale(center_button_img, (100, 100))
+    reset_button_img = pygame.transform.scale(reset_button_img, (100, 100))
     search_button_img = pygame.transform.scale(search_button_img, (100, 100))
-    finish_button_img = pygame.transform.scale(finish_button_img, (100, 100))
 
     #graphics_rect
     input_box_rect = input_box_img.get_rect()
-    delete_button_rect = delete_button_img.get_rect()
-    insert_button_rect = insert_button_img.get_rect()
-    center_button_rect = center_button_img.get_rect()
-    search_button_rect = search_button_img.get_rect()
-    finish_button_rect = finish_button_img.get_rect()
+    delete_button_rect = delete_button_img.get_rect(topleft=(25,200))
+    insert_button_rect = insert_button_img.get_rect(topleft=(25,150))
+    center_button_rect = center_button_img.get_rect(topleft=(25,250))
+    reset_button_rect = reset_button_img.get_rect(topleft=(25,150))
+    search_button_rect = search_button_img.get_rect(topleft=(25,300))
 
     user_input = ""
     bst = BinarySearchTree()
@@ -123,9 +123,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         #blit buttons
         screen.blit(input_box_img, input_box_rect)
         screen.blit(delete_button_img, delete_button_rect)
-        screen.blit(search_button_img, search_button_rect)
+        screen.blit(reset_button_img, reset_button_rect)
         screen.blit(center_button_img, center_button_rect)
-        screen.blit(finish_button_img, finish_button_rect)
+        screen.blit(search_button_img, finish_button_rect)
         screen.blit(insert_button_img, insert_button_rect)
 
         input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
