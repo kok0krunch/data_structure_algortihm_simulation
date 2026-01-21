@@ -65,7 +65,7 @@ class BinarySearchTree:
         return current
 
     def search(self,number):
-        self.root=self.search_branching(self.root, number)
+        self.search_branching(self.root, number)
 
     def search_branching(self,node,number):
         if node is None: # line of code to avoid exception when no node value is found equal to inputted number
@@ -80,7 +80,6 @@ class BinarySearchTree:
         else: # Searched is found
             if number==node.number:
                 print(f"{number} is found.")
-                input_number()
         return node
 
     def print_tree(self): #show the tree
