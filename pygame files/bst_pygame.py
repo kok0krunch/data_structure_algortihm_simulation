@@ -68,7 +68,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     tree_offset_y=0
     initial_offset_x=0
     initial_offset_y=0
-    current_action="insert"
+    current_action=None
 
     running = True
 
@@ -151,10 +151,18 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(reset_button_img, reset_button_rect)
         screen.blit(search_button_img, search_button_rect)
         
-        label=f"{current_action.capitalize()}:{user_input}"
-        input_surface = input_font.render(label, True, (0,0,0))
-        input_rect=input_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-45))
-        screen.blit(input_surface,input_rect)
+        if current_action==None:
+            opening_font = pygame.font.SysFont(None, 34) 
+            opening_text="Select an action to start"
+            opening_message_surface = opening_font.render(opening_text, True, (0,0,0))
+            opening_message_rect=opening_message_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-45))
+            screen.blit(opening_message_surface,opening_message_rect)
+        
+        else:     
+            label=f"{current_action.capitalize()}:{user_input}"
+            input_surface = input_font.render(label, True, (0,0,0))
+            input_rect=input_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-45))
+            screen.blit(input_surface,input_rect)
         
         # Draw back button
         if back_btn.draw():
