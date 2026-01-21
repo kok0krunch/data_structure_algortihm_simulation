@@ -40,15 +40,22 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     delete_button_img = pygame.image.load("images/bst_images/bst_delete.png").convert_alpha()
     insert_button_img = pygame.image.load("images/bst_images/bst_insert.png").convert_alpha()
     center_button_img = pygame.image.load("images/bst_images/bst_center.png").convert_alpha()
-    search_buttonimg = pygame.image.load("images/bst_images/bst_search.png").convert_alpha()
+    search_button_img = pygame.image.load("images/bst_images/bst_search.png").convert_alpha()
     finish_button_img = pygame.image.load("images/bst_images/bst_done.png").convert_alpha()
+
+    #graphics_rect
+    input_box_rect = input_box_img.get_rect()
+    delete_button_rect = delete_button_img.get_rect()
+    insert_button_rect = insert_button_img.get_rect()
+    center_button_rect = center_button_img.get_rect()
+    search_button_rect = search_button_img.get_rect()
+    finish_button_rect = finish_button_img.get_rect()
 
     user_input = ""
     bst = BinarySearchTree()
     font = pygame.font.SysFont(None, 26)
     input_font = pygame.font.SysFont(None, 40)
     input_box_img = pygame.transform.scale(input_box_img, (300, 300)) 
-    input_box_rect = input_box_img.get_rect()
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
     tree_offset_x = 0
     tree_offset_y = 0
