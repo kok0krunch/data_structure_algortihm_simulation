@@ -158,6 +158,12 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
             remove_rect= input_surface.get_rect(
             center=(screen.get_width() // 2, screen.get_height() - 45))
             screen.blit(remove_surface, remove_rect)
+        
+        if current_action=="search":
+            find_surface = input_font.render("search: " + user_input, True, (0, 0, 0))
+            find_rect= input_surface.get_rect(
+            center=(screen.get_width() // 2, screen.get_height() - 45))
+            screen.blit(find_surface, find_rect)
 
         # Draw back button
         if back_btn.draw():
