@@ -24,15 +24,15 @@ def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=110):
         new_h_spacing=max(h_spacing/2,30)
         pygame.draw.line(screen, (0,0,0), (x, y + radius), (child_x, child_y - radius), 2)
         node_rect = node_img.get_rect(center=(child_x, child_y))
-        draw_bst(screen, node.left, child_x, child_y, font, new_h_spacing, v_spacing)
-    
+        draw_bst(screen, node.left, child_x + tree_offset_x, child_y + tree_offset_y, font, new_h_spacing, v_spacing)
+        
     if node.right: #right child, number is higher than the root.
         child_x = x + h_spacing
         child_y = y + v_spacing
         new_h_spacing=max(h_spacing/2,30)
         pygame.draw.line(screen, (0,0,0), (x, y + radius), (child_x, child_y - radius), 2)
         node_rect = node_img.get_rect(center=(child_x, child_y))
-        draw_bst(screen, node.right, child_x, child_y, font, new_h_spacing, v_spacing)
+        draw_bst(screen, node.right, child_x + tree_offset_x, child_y + tree_offset_y, font, new_h_spacing, v_spacing)
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
     # graphics
@@ -65,10 +65,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
     font = pygame.font.SysFont(None, 26)
     input_font = pygame.font.SysFont(None, 40) 
-    tree_offset_x = 0
-    tree_offset_y = 0
     current_action="insert"
-    past_action="insert"
     
     running = True
     while running:
@@ -107,27 +104,21 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     user_input += event.unicode
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                if delete_button_rect.collidepoint(event.pos):
                     mouse_pos = event.pos
 
                     if insert_button_rect.collidepoint(mouse_pos):
-                        past_action=current_action
                         current_action="insert"
 
                     elif delete_button_rect.collidepoint(mouse_pos):
-                        past_action=current_action
                         current_action="delete"
 
                     elif search_button_rect.collidepoint(mouse_pos):
-                        past_Action=current_action
-                        current_action="serch"
+                        current_action="search"
                     
                     elif center_button_rect.collidepoint(mouse_pos):
-                            draw_bst(screen, bst.root, screen.get_width()//2-tree_offset_x, 180-tree_offset_y, font)
-                            tree_offset_x = 0
-                            tree_offset_y = 0
+                        tree_offset_x=initial_offset_x
+                        tree_offset_y=initial_offset_y
 
-        
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
 
@@ -153,18 +144,18 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
             center=(screen.get_width() // 2, screen.get_height() - 45))
             screen.blit(input_surface, input_rect)
         
-        if current_action=="delete":
+        elif current_action=="delete":
             remove_surface = input_font.render("Delete: " + user_input, True, (0, 0, 0))
             remove_rect= input_surface.get_rect(
             center=(screen.get_width() // 2, screen.get_height() - 45))
             screen.blit(remove_surface, remove_rect)
         
-        if current_action=="search":
+        elif current_action=="search":
             find_surface = input_font.render("search: " + user_input, True, (0, 0, 0))
             find_rect= input_surface.get_rect(
             center=(screen.get_width() // 2, screen.get_height() - 45))
             screen.blit(find_surface, find_rect)
-
+        
         # Draw back button
         if back_btn.draw():
             running = False
