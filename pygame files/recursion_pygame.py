@@ -24,8 +24,6 @@ black = (0, 0, 0)
 blue = (100, 149, 237)
 white = (250, 250, 250)
 move_delay = 0.6
-peg_img = pygame.image.load("images/peg_img.png").convert_alpha()
-disk_img = pygame.image.load("images/disk_img.png").convert_alpha()
 
 def draw_game_background(screen):
     rect_width = 1250
@@ -104,7 +102,7 @@ def draw_disks(screen, towers):
 
 def recursion_menu(screen, clock, globalbg_img, back_btn):
     """Menu function for Tower of Hanoi recursion simulation"""
-    font = pygame.font.SysFont(None, 32)
+    font = pygame.font.SysFont("couriernew", 32, bold=True)
     
     num_disks = 0
     origin = 0
@@ -112,17 +110,26 @@ def recursion_menu(screen, clock, globalbg_img, back_btn):
     stage = 0
     user_input = ""
     
+    text_x = 1370 // 2
+    text_y = 810 // 2
+    
     while stage < 3:
         screen.blit(globalbg_img, (0, 0))
+        draw_game_background(screen)
+        
+        if back_btn.draw():
+            return None
         
         if stage == 0:
-            text = font.render("Enter number of disks (1-7): " + user_input, True, black)
+            text = "Enter number of disks (1-7): "
         elif stage == 1:
-            text = font.render("Enter origin tower (1,2,3): " + user_input, True, black)
+            text = "Enter origin tower (1,2,3): "
         else:
-            text = font.render("Enter destination tower (1,2,3): " + user_input, True, black)
-        
-        screen.blit(text, (50, 200))
+            text = "Enter destination tower (1,2,3): "
+
+        text_surface = font.render(text + user_input, True, black)
+        text_rect = text_surface.get_rect(center=(text_x, text_y))
+        screen.blit(text_surface, text_rect)
         pygame.display.flip()
         
         for event in pygame.event.get():

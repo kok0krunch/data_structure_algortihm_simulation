@@ -4,7 +4,7 @@ from stacks_pygame import stacks_menu
 from queue_pygame import queue_menu
 from bt_pygame import bt_menu
 from bst_pygame import bst_menu
-#from recursion_pygame import recursion_menu
+from recursion_pygame import recursion_menu
 
 # pygame setup
 pygame.init()
