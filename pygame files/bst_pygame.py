@@ -69,7 +69,6 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     search_button_rect = search_button_img.get_rect(topleft=(25,350))
 
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
-
     user_input = ""
     bst = BinarySearchTree()
     font = pygame.font.SysFont("courier new", 21)
@@ -81,6 +80,8 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     initial_offset_x=0
     initial_offset_y=0
     current_action=None
+    status_message = ""      # What text to show
+    status_color = (0, 0, 0) # Default color (black)
 
     mouse_pos = pygame.mouse.get_pos()
 
@@ -125,8 +126,16 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                         elif current_action=="delete":
                             bst.delete(number)
 
-                        elif current_action=="search":
-                            bst.search(number)
+                        elif current_action == "search":
+                            if bst.search(number):   # use your terminal search
+                                status_message = f"{number} is FOUND!"
+                                status_color = (0, 200, 0)  # green
+                                screen.blit(status_message, instruction_rect)
+
+                            else:
+                                status_message = f"{number} is NOT found!"
+                                status_color = (200, 0, 0)  # red
+                                screen.blit(instruction_surface, instruction_rect)
 
                         user_input = ""  # clear for next input
 
