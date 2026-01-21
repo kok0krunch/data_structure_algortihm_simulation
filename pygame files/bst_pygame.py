@@ -132,7 +132,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                                 
                             else:
                                 status_message = f"{number} is NOT found!"
-                                status_color=(200, 0, 0)
+                                status_color=(255,5,5)
 
                         user_input = ""  # clear for next input
 
@@ -199,7 +199,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
             status_font = pygame.font.SysFont("courier new", 40)
             status_font.set_bold(True)
             status_surface = status_font.render(status_message, True, status_color)
-            screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-100)))
+            padding_x, padding_y = 10, 5
+            text_box_rect = status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-110))
+            bg_rect = pygame.Rect(text_box_rect.left - padding_x, text_box_rect.top - padding_y, text_box_rect.width + 2*padding_x, text_box_rect.height + 2*padding_y)
+            text_box_surface = pygame.Surface((bg_rect.width, bg_rect.height))
+            text_box_surface.set_alpha(200)  # semi-transparent
+            text_box_surface.fill((255, 255, 255))   # white background
+            screen.blit(text_box_surface, (bg_rect.left, bg_rect.top))
+            screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-110)))
 
         if current_action==None:
             opening_font = pygame.font.SysFont("courier new", 16) 
