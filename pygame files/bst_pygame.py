@@ -67,7 +67,8 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     input_font = pygame.font.SysFont(None, 40) 
     tree_offset_x = 0
     tree_offset_y = 0
-    
+    current_action="insert"
+    past_action="insert"
     
     running = True
     while running:
@@ -110,18 +111,19 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     mouse_pos = event.pos
 
                     if insert_button_rect.collidepoint(mouse_pos):
-                        number = int(input_box.get_text())  # your input box
-                        bst.insert(number)
+                        past_action=current_action
+                        current_action="insert"
 
                     elif delete_button_rect.collidepoint(mouse_pos):
-                        number = int(input_box.get_text())
-                        bst.delete(number)
+                        past_action=current_action
+                        current_action="delete"
 
                     elif search_button_rect.collidepoint(mouse_pos):
-                        number = int(input_box.get_text())
-                        bst.search(number)
+                        past_Action=current_action
+                        current_action="serch"
                     
                     elif center_button_rect.collidepoint(mouse_pos):
+                            draw_bst(screen, bst.root, screen.get_width()//2-tree_offset_x, 180-tree_offset_y, font)
                             tree_offset_x = 0
                             tree_offset_y = 0
 
@@ -145,10 +147,17 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(search_button_img, search_button_rect)
         screen.blit(insert_button_img, insert_button_rect)
 
-        input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
-        input_rect = input_surface.get_rect(
-        center=(screen.get_width() // 2, screen.get_height() - 45))
-        screen.blit(input_surface, input_rect)
+        if current_action=="insert":
+            input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
+            input_rect = input_surface.get_rect(
+            center=(screen.get_width() // 2, screen.get_height() - 45))
+            screen.blit(input_surface, input_rect)
+        
+        if current_action=="delete":
+            input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
+            input_rect = input_surface.get_rect(
+            center=(screen.get_width() // 2, screen.get_height() - 45))
+            screen.blit(input_surface, input_rect)
 
         # Draw back button
         if back_btn.draw():
