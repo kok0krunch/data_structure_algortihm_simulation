@@ -148,16 +148,16 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(insert_button_img, insert_button_rect)
 
         if current_action=="insert":
-            input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
+            input_surface = input_font.render("Insert: " + user_input, True, (0, 0, 0))
             input_rect = input_surface.get_rect(
             center=(screen.get_width() // 2, screen.get_height() - 45))
             screen.blit(input_surface, input_rect)
         
         if current_action=="delete":
-            input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
-            input_rect = input_surface.get_rect(
+            remove_surface = input_font.render("Delete: " + user_input, True, (0, 0, 0))
+            remove_rect= input_surface.get_rect(
             center=(screen.get_width() // 2, screen.get_height() - 45))
-            screen.blit(input_surface, input_rect)
+            screen.blit(remove_surface, remove_rect)
 
         # Draw back button
         if back_btn.draw():
