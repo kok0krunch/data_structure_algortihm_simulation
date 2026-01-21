@@ -35,12 +35,18 @@ def draw_bst(screen, node, x, y, font, h_spacing=500, v_spacing=110):
         draw_bst(screen, node.right, child_x, child_y, font, new_h_spacing, v_spacing)
 
 def bst_menu(screen, clock, globalbg_img, back_btn):
-    """Binary Search Tree menu function"""
+    # graphics
+    input_box_img = pygame.image.load("images/bst_images/bst_input_box.png").convert_alpha()
+    delete_button_img = pygame.image.load("images/bst_images/bst_delete.png").convert_alpha()
+    insert_button_img = pygame.image.load("images/bst_images/bst_insert.png").convert_alpha()
+    center_button_img = pygame.image.load("images/bst_images/bst_center.png").convert_alpha()
+    search_buttonimg = pygame.image.load("images/bst_images/bst_search.png").convert_alpha()
+    finish_button_img = pygame.image.load("images/bst_images/bst_done.png").convert_alpha()
+
     user_input = ""
     bst = BinarySearchTree()
     font = pygame.font.SysFont(None, 26)
     input_font = pygame.font.SysFont(None, 40)
-    input_box_img = pygame.image.load("images/bst_images/bst_input_box.png").convert_alpha()
     input_box_img = pygame.transform.scale(input_box_img, (300, 300)) 
     input_box_rect = input_box_img.get_rect()
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
@@ -59,7 +65,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
             if event.type == pygame.QUIT:
                 return False
             
-            if event.type == pygame.KEYDOWN:
+            elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     tree_offset_x += 50  # move tree right
 
@@ -83,6 +89,10 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
                 elif event.unicode.isdigit():  # allow only digits
                     user_input += event.unicode
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if button_rect.collidepoint(event.pos):
+                    pass
         
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
