@@ -24,8 +24,6 @@ black = (0, 0, 0)
 blue = (100, 149, 237)
 white = (250, 250, 250)
 move_delay = 0.6
-peg_img = pygame.image.load("images/peg_img.png").convert_alpha()
-disk_img = pygame.image.load("images/disk_img.png").convert_alpha()
 
 def draw_game_background(screen):
     rect_width = 1250
