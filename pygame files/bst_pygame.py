@@ -52,6 +52,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     reset_button_img = pygame.transform.scale(reset_button_img, (85, 35))
     search_button_img = pygame.transform.scale(search_button_img, (85, 35))
 
+    insert_scale = 1.0
+    delete_scale = 1.0
+    search_scale = 1.0
+    center_scale = 1.0
+    reset_scale = 1.0
+    HOVER_SCALE = 1.2
+    NORMAL_SCALE = 1.0
+
     #graphics_rect
     input_box_rect = input_box_img.get_rect()
     delete_button_rect = delete_button_img.get_rect(topleft=(25,200))
@@ -73,6 +81,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     initial_offset_x=0
     initial_offset_y=0
     current_action=None
+
+    mouse_pos = pygame.mouse.get_pos()
+
+    def apply_hover(img, rect, scale):
+        w, h = img.get_size()
+        new_img = pygame.transform.scale(img, (int(w*scale), int(h*scale)))
+        new_rect = new_img.get_rect(center=rect.center)
+        return new_img, new_rect
 
     running = True
 
@@ -151,13 +167,27 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         instruction_rect = instruction_surface.get_rect(topleft=(x_margin,y_margin))
         screen.blit(instruction_surface, instruction_rect)
 
+        # Buttons go bigger when cursor hovers above it
+        insert_scale = HOVER_SCALE if insert_button_rect.collidepoint(mouse_pos) else NORMAL_SCALE
+        delete_scale = HOVER_SCALE if delete_button_rect.collidepoint(mouse_pos) else NORMAL_SCALE
+        search_scale = HOVER_SCALE if search_button_rect.collidepoint(mouse_pos) else NORMAL_SCALE
+        center_scale = HOVER_SCALE if center_button_rect.collidepoint(mouse_pos) else NORMAL_SCALE
+        reset_scale  = HOVER_SCALE if reset_button_rect.collidepoint(mouse_pos) else NORMAL_SCALE
+
+        #Adds variable name to the apply hover for easy calling
+        insert_draw_img, insert_draw_rect = apply_hover(insert_button_img, insert_button_rect, insert_scale)
+        delete_draw_img, delete_draw_rect = apply_hover(delete_button_img, delete_button_rect, delete_scale)
+        search_draw_img, search_draw_rect = apply_hover(search_button_img, search_button_rect, search_scale)
+        center_draw_img, center_draw_rect = apply_hover(center_button_img, center_button_rect, center_scale)
+        reset_draw_img,  reset_draw_rect  = apply_hover(reset_button_img,  reset_button_rect,  reset_scale)
+
         #blit buttons
         screen.blit(input_box_img, input_box_rect)
-        screen.blit(insert_button_img, insert_button_rect)
-        screen.blit(delete_button_img, delete_button_rect)
-        screen.blit(center_button_img, center_button_rect)
-        screen.blit(reset_button_img, reset_button_rect)
-        screen.blit(search_button_img, search_button_rect)
+        screen.blit(insert_draw_img, insert_draw_rect)
+        screen.blit(delete_draw_img, delete_draw_rect)
+        screen.blit(center_draw_img, center_draw_rect)
+        screen.blit(reset_draw_img,  reset_draw_rect)
+        screen.blit(search_draw_img, search_draw_rect)
         
         if current_action==None:
             opening_font = pygame.font.SysFont("courier new", 16) 
