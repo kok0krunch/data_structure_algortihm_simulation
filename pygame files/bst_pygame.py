@@ -107,7 +107,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
                         elif current_action=="search":
                             bst.search(number)
-                        
+
                         user_input = ""  # clear for next input
 
                 elif event.key == pygame.K_BACKSPACE:  # allow deleting
@@ -122,17 +122,17 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     if insert_button_rect.collidepoint(mouse_pos):
                         current_action="insert"
 
-                    elif delete_button_rect.collidepoint(mouse_pos):
+                    if delete_button_rect.collidepoint(mouse_pos):
                         current_action="delete"
 
-                    elif search_button_rect.collidepoint(mouse_pos):
+                    if search_button_rect.collidepoint(mouse_pos):
                         current_action="search"
                     
-                    elif center_button_rect.collidepoint(mouse_pos):
+                    if center_button_rect.collidepoint(mouse_pos):
                         tree_offset_x=initial_offset_x
                         tree_offset_y=initial_offset_y
                     
-                    elif reset_button_rect.collidepoint(mouse_pos):
+                    if reset_button_rect.collidepoint(mouse_pos):
                         bst=BinarySearchTree()
 
         if bst.root:
