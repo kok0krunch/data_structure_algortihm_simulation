@@ -199,7 +199,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
             status_font = pygame.font.SysFont("courier new", 40)
             status_font.set_bold(True)
             status_surface = status_font.render(status_message, True, status_color)
-            screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-90)))
+            screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-100)))
 
         if current_action==None:
             opening_font = pygame.font.SysFont("courier new", 16) 
