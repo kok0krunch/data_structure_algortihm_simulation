@@ -145,11 +145,11 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
         #blit buttons
         screen.blit(input_box_img, input_box_rect)
-        screen.blit(delete_button_img, delete_button_rect)
-        screen.blit(reset_button_img, reset_button_rect)
-        screen.blit(center_button_img, center_button_rect)
-        screen.blit(search_button_img, search_button_rect)
         screen.blit(insert_button_img, insert_button_rect)
+        screen.blit(delete_button_img, delete_button_rect)
+        screen.blit(center_button_img, center_button_rect)
+        screen.blit(reset_button_img, reset_button_rect)
+        screen.blit(search_button_img, search_button_rect)
         
         label=f"{current_action.capitalize()}:{user_input}"
         input_surface = input_font.render(label, True, (0,0,0))
