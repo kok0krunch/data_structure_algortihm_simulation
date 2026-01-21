@@ -43,6 +43,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     search_button_img = pygame.image.load("images/bst_images/bst_search.png").convert_alpha()
     finish_button_img = pygame.image.load("images/bst_images/bst_done.png").convert_alpha()
 
+    #graphics_scale
+    input_box_img = pygame.transform.scale(input_box_img, (300, 300))
+    delete_button_img = pygame.transform.scale(delete_button_img, (100, 100))
+    insert_button_img = pygame.transform.scale(insert_button_img, (100, 100))
+    center_button_img = pygame.transform.scale(center_button_img, (100, 100))
+    search_button_img = pygame.transform.scale(search_button_img, (100, 100))
+    finish_button_img = pygame.transform.scale(finish_button_img, (100, 100))
+
     #graphics_rect
     input_box_rect = input_box_img.get_rect()
     delete_button_rect = delete_button_img.get_rect()
@@ -53,10 +61,10 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
     user_input = ""
     bst = BinarySearchTree()
-    font = pygame.font.SysFont(None, 26)
-    input_font = pygame.font.SysFont(None, 40)
-    input_box_img = pygame.transform.scale(input_box_img, (300, 300)) 
+    #graphics position
     input_box_rect.center = (screen.get_width() // 2, screen.get_height() - 30)
+    font = pygame.font.SysFont(None, 26)
+    input_font = pygame.font.SysFont(None, 40) 
     tree_offset_x = 0
     tree_offset_y = 0
     
@@ -112,7 +120,14 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         instruction_rect = instruction_surface.get_rect(topleft=(x_margin,y_margin))
         screen.blit(instruction_surface, instruction_rect)
 
+        #blit buttons
         screen.blit(input_box_img, input_box_rect)
+        screen.blit(delete_button_img, delete_button_rect)
+        screen.blit(search_button_img, search_button_rect)
+        screen.blit(center_button_img, center_button_rect)
+        screen.blit(finish_button_img, finish_button_rect)
+        screen.blit(insert_button_img, insert_button_rect)
+
         input_surface = input_font.render("Input: " + user_input, True, (0, 0, 0))
         input_rect = input_surface.get_rect(
         center=(screen.get_width() // 2, screen.get_height() - 45))
