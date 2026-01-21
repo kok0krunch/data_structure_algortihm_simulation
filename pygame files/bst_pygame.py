@@ -80,9 +80,8 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
     initial_offset_x=0
     initial_offset_y=0
     current_action=None
-    status_message = ""      # What text to show
-    status_color = (0, 0, 0) # Default color (black)
-
+    status_message=""
+    status_color=(0, 0, 0)
     mouse_pos = pygame.mouse.get_pos()
 
     def apply_hover(img, rect, scale):
@@ -129,13 +128,11 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                         elif current_action == "search":
                             if bst.search(number):   # use your terminal search
                                 status_message = f"{number} is FOUND!"
-                                status_color = (0, 200, 0)  # green
-                                screen.blit(status_message, instruction_rect)
-
+                                status_color=(0, 200, 0)
+                                
                             else:
                                 status_message = f"{number} is NOT found!"
-                                status_color = (200, 0, 0)  # red
-                                screen.blit(instruction_surface, instruction_rect)
+                                status_color=(200, 0, 0)
 
                         user_input = ""  # clear for next input
 
@@ -198,6 +195,11 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         screen.blit(reset_draw_img,  reset_draw_rect)
         screen.blit(search_draw_img, search_draw_rect)
         
+        if status_message != "":
+            status_font = pygame.font.SysFont("courier new", 40)
+            status_surface = status_font.render(status_message, True, status_color)
+            screen.blit(status_surface, status_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-90)))
+
         if current_action==None:
             opening_font = pygame.font.SysFont("courier new", 16) 
             opening_font.set_bold(True)
