@@ -50,7 +50,7 @@ class BinarySearchTree:
             else:
                 new_node = self._min_value_node(node.right) # For nodes with two child nodes
                 node.number = new_node.number #Changes parent node with the right child node
-                node.right = self.delete(node.right, new_node.number)
+                node.right = self.deletion_branching(node.right, new_node.number)
         return node
 
     def _min_value_node(self, node): 
