@@ -161,6 +161,9 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                     if reset_button_rect.collidepoint(mouse_pos):
                         bst=BinarySearchTree()
 
+        if current_action != "search":
+            status_message = ""
+
         if bst.root:
             draw_bst(screen, bst.root, screen.get_width()//2+tree_offset_x, 180+tree_offset_y, font)
 
