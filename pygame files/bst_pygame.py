@@ -44,11 +44,11 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
 
     #graphics_scale
     input_box_img = pygame.transform.scale(input_box_img, (300, 300))
-    delete_button_img = pygame.transform.scale(delete_button_img, (100, 100))
-    insert_button_img = pygame.transform.scale(insert_button_img, (100, 100))
-    center_button_img = pygame.transform.scale(center_button_img, (100, 100))
-    reset_button_img = pygame.transform.scale(reset_button_img, (100, 100))
-    search_button_img = pygame.transform.scale(search_button_img, (100, 100))
+    delete_button_img = pygame.transform.scale(delete_button_img, (85, 35))
+    insert_button_img = pygame.transform.scale(insert_button_img, (85, 35))
+    center_button_img = pygame.transform.scale(center_button_img, (85, 35))
+    reset_button_img = pygame.transform.scale(reset_button_img, (85, 35))
+    search_button_img = pygame.transform.scale(search_button_img, (85, 35))
 
     #graphics_rect
     input_box_rect = input_box_img.get_rect()
