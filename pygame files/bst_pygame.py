@@ -98,7 +98,6 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
                 elif event.key == pygame.K_RETURN:  # Enter key
                     if user_input != "":
                         number = int(user_input)
-                        bst.insert(number)  # insert into BST
 
                         if current_action=="insert":
                             bst.insert(number)
@@ -154,7 +153,7 @@ def bst_menu(screen, clock, globalbg_img, back_btn):
         
         label=f"{current_action.capitalize()}:{user_input}"
         input_surface = input_font.render(label, True, (0,0,0))
-        input_rect=input_surface.get(center=(screen.getwidth()//2, screen.geth_height()-45))
+        input_rect=input_surface.get_rect(center=(screen.get_width()//2, screen.get_height()-45))
         screen.blit(input_surface,input_rect)
         
         # Draw back button
