@@ -5,7 +5,6 @@ import time
 pygame.init()
 
 screen = pygame.display.set_mode((800,400))
-pygame.display.set_caption('Tower of Hanoi')
 clock = pygame.time.Clock()
 
 menu_bg = pygame.image.load("images\menu_images\globalbg_img.jpg").convert()

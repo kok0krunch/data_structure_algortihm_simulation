@@ -45,6 +45,7 @@ except Exception as e:
 
 screen = pygame.display.set_mode((1366, 768))
 clock = pygame.time.Clock()
+pygame.display.set_caption('Cat\'s Cozy Corner - Data Structures Visualizer')
 
 """ load images """
 
